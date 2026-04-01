@@ -79,7 +79,7 @@ function IndustrialLiftOff({ onClick, active }) {
         className={`absolute inset-2 rounded-full transition-all duration-500 ${active ? 'bg-[#F43325] shadow-[inset_0_4px_15px_rgba(255,255,255,0.3)]' : 'bg-[#1e2229] shadow-[inset_0_4px_10px_rgba(0,0,0,0.6)]'}`}
       ></div>
       <span className={`relative z-10 font-mono font-bold text-sm tracking-[0.2em] pointer-events-none transition-colors duration-500 ${active ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]' : 'text-[#64748B]'}`}>
-        EMBARQUER
+        LAUNCH
       </span>
     </motion.button>
   );
