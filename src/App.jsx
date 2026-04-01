@@ -119,7 +119,7 @@ export default function Portfolio() {
     if (!formData.name || !formData.email || !formData.message) return;
     
     try {
-      const response = await fetch("http://localhost:5000/api/contact", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
