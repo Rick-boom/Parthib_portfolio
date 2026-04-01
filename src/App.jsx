@@ -333,8 +333,8 @@ export default function Portfolio() {
                   <div className="flex items-center gap-2"><span className="text-[#64748B]">EMAIL:</span> parthibsaha.11sc2020@gmail.com</div>
                   <div className="flex items-center gap-2"><span className="text-[#64748B]">COMMS_LINK:</span> +91 9330616676</div>
                   <div className="mt-4 p-3 bg-[#161A22] border border-[#334155] rounded text-xs leading-relaxed text-[#64748B]">
-                    > END-TO-END ENCRYPTION ENABLED.<br/>
-                    > WAITING FOR USER INPUT...
+                    &gt; END-TO-END ENCRYPTION ENABLED.<br/>
+                    &gt; WAITING FOR USER INPUT...
                   </div>
                 </div>
 
