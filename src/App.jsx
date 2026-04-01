@@ -98,8 +98,8 @@ export default function Portfolio() {
   const [launched, setLaunched] = useState(false);
   
   const [roadmapVisible, setRoadmapVisible] = useState(false);
-  const [pricingVisible, setPricingVisible] = useState(false);
-  const [visionVisible, setVisionVisible] = useState(false);
+  const [projectsVisible, setProjectsVisible] = useState(false);
+  const [skillsVisible, setSkillsVisible] = useState(false);
   const [contactVisible, setContactVisible] = useState(false);
 
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -121,10 +121,10 @@ export default function Portfolio() {
 
   // System secrets logic
   useEffect(() => {
-    if (fuel === 0 && tech === 0 && pump === 1) setRoadmapVisible(true);
-    if (fuel === 1 && tech === 0 && pump === 2) setPricingVisible(true);
-    if (fuel === 2 && tech === 1 && pump === 3) setVisionVisible(true);
-    if (fuel === 0 && tech === 1 && pump === 3) setContactVisible(true);
+    setRoadmapVisible(fuel === 0 && tech === 0 && pump === 1);
+    setProjectsVisible(fuel === 1 && tech === 0 && pump === 2);
+    setSkillsVisible(fuel === 2 && tech === 1 && pump === 3);
+    setContactVisible(fuel === 0 && tech === 1 && pump === 3);
   }, [fuel, tech, pump]);
 
   const validateLaunch = () => {
@@ -241,11 +241,12 @@ export default function Portfolio() {
               style={{ transform: "rotateX(180deg)", backfaceVisibility: "hidden" }}
             >
               <Panel title="SYSTEM_SECRETS_OVERRIDE" className="border-[#F43325]/50 bg-[#110505]">
-                <div className="text-xs font-mono text-[#F43325] space-y-3 leading-relaxed">
+                <div className="text-xs font-mono text-[#F43325] space-y-2 leading-relaxed">
                   <div className="flex justify-between border-b border-[#F43325]/30 pb-1"><span>Target: OVERRIDE CODE</span> <span>[ 3468 ]</span></div>
                   <div className="flex justify-between border-b border-[#F43325]/30 pb-1"><span>Target: ROADMAP</span> <span>[ HYD, LIQ, 01 ]</span></div>
-                  <div className="flex justify-between border-b border-[#F43325]/30 pb-1"><span>Target: PRICING</span> <span>[ H2, LIQ, 02 ]</span></div>
-                  <div className="flex justify-between"><span>Target: VISION</span> <span>[ SOL, SOL, 03 ]</span></div>
+                  <div className="flex justify-between border-b border-[#F43325]/30 pb-1"><span>Target: PROJECTS</span> <span>[ H2, LIQ, 02 ]</span></div>
+                  <div className="flex justify-between border-b border-[#F43325]/30 pb-1"><span>Target: SKILLS</span> <span>[ SOL, SOL, 03 ]</span></div>
+                  <div className="flex justify-between"><span>Target: CONTACT</span> <span>[ HYD, SOL, 03 ]</span></div>
                 </div>
               </Panel>
             </div>
@@ -318,6 +319,36 @@ export default function Portfolio() {
                   <div className="text-[#F43325] font-bold">PHASE_03 [25-26] // ARCHITECTURE</div>
                   <div className="text-[#64748B] mt-1">Deep Learning, CV, System Design. Target: Img Processing, CNN Rec Engine.</div>
                 </div>
+              </div>
+            </Panel>
+          </motion.div>
+        )}
+
+        {projectsVisible && (
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="col-span-1 md:col-span-2 xl:col-span-4">
+            <Panel title="DB_FILE // PROJECTS_ARCHIVE">
+              <div className="font-mono text-sm text-[#E2E8F0] space-y-4 max-h-[200px] overflow-y-auto custom-scroll pr-4 bg-[#0B0E14] p-4 rounded border border-[#2B303B]">
+                <div className="border-l-2 border-[#64748B] pl-3 py-1">
+                  <div className="text-[#F43325] font-bold">PRJ_01 // STUDY_ANALYZER_ML</div>
+                  <div className="text-[#64748B] mt-1">Data-driven performance metric analysis tool utilizing Scikit-Learn pipelines.</div>
+                </div>
+                <div className="border-l-2 border-[#64748B] pl-3 py-1">
+                 <div className="text-[#F43325] font-bold">PRJ_02 // HYPRSPACE_CONTROL</div>
+                  <div className="text-[#64748B] mt-1">Interactive dashboard interface featuring animated React components and secure access codes.</div>
+                </div>
+              </div>
+            </Panel>
+          </motion.div>
+        )}
+
+        {skillsVisible && (
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="col-span-1 md:col-span-2 xl:col-span-4">
+            <Panel title="DB_FILE // SKILL_MATRIX">
+              <div className="font-mono text-sm text-[#E2E8F0] space-y-2 bg-[#0B0E14] p-4 rounded border border-[#2B303B]">
+                <div className="flex justify-between items-center"><span className="text-[#64748B]">PYTHON</span><span className="text-white">||||||||||--</span></div>
+                <div className="flex justify-between items-center"><span className="text-[#64748B]">C++</span><span className="text-white">|||||||||---</span></div>
+                <div className="flex justify-between items-center"><span className="text-[#64748B]">MACHINE_LEARNING</span><span className="text-white">||||||||----</span></div>
+                <div className="flex justify-between items-center"><span className="text-[#64748B]">REACT/NODEJS</span><span className="text-white">|||||||-----</span></div>
               </div>
             </Panel>
           </motion.div>
