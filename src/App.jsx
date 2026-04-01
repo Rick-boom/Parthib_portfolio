@@ -290,7 +290,7 @@ export default function Portfolio() {
         <Panel title="TELEMETRY_STREAM" className="col-span-1 md:col-span-2">
            <div className="h-full bg-[#0B0E14] rounded border border-[#2B303B] relative overflow-hidden flex items-center p-2">
              <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#F43325 1px, transparent 1px), linear-gradient(90deg, #F43325 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-             <svg viewBox="0 0 400 100" className="w-full h-16 drop-shadow-[0_0_5px_rgba(244,51,37,0.8)]">
+             <svg viewBox="0 0 400 100" preserveAspectRatio="none" className="w-full h-16 drop-shadow-[0_0_5px_rgba(244,51,37,0.8)]">
                 <path id="telemetryPath" d="M0,80 Q50,90 100,50 T200,30 T300,70 T400,20" fill="none" stroke="#F43325" strokeWidth="2" strokeDasharray="4,4">
                   <animate attributeName="stroke-dashoffset" values="40;0" dur="2s" repeatCount="indefinite" />
                 </path>
