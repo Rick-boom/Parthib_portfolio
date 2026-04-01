@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-import twilio from 'twilio';
 
 // Notification setup: NodeMailer (Email)
 const transporter = nodemailer.createTransport({
@@ -9,17 +8,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.GMAIL_APP_PASSWORD,
   },
 });
-
-// Notification setup: Twilio (WhatsApp)
-let twilioClient;
-if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
-  try {
-    twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-    console.log('Twilio WhatsApp initialized successfully.');
-  } catch (e) {
-    console.error('Failed to init twilio:', e);
-  }
-}
 
 export default async function handler(req, res) {
   // We only allow POST requests for this endpoint
@@ -46,16 +34,16 @@ export default async function handler(req, res) {
       });
     }
 
-    // 2. Send WhatsApp Notification (If variables exist)
-    if (twilioClient && process.env.TWILIO_WHATSAPP_FROM && process.env.YOUR_WHATSAPP_NUMBER) {
-      await twilioClient.messages.create({
-        from: process.env.TWILIO_WHATSAPP_FROM,
-        to: process.env.YOUR_WHATSAPP_NUMBER,
-        body: notifyContent,
-      });
+    // 2. Send WhatsApp Notification via CallMeBot (If variables exist)
+    if (process.env.CALLMEBOT_PHONE && process.env.CALLMEBOT_API_KEY) {
+      const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(process.env.CALLMEBOT_PHONE)}&text=${encodeURIComponent(notifyContent)}&apikey=${encodeURIComponent(process.env.CALLMEBOT_API_KEY)}`;
+      
+      const waResponse = await fetch(whatsappUrl);
+      if (!waResponse.ok) {
+        console.error('CallMeBot WhatsApp notification failed:', await waResponse.text());
+      }
     }
 
-    // Since we removed SQLite, successfully sending the messages means we are done!
     return res.status(200).json({ success: true, message: 'Message sent successfully.' });
 
   } catch (err) {
