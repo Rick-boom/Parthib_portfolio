@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Share+Tech+Mono&display=swap');
+
+.font-space-heading {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.15em;
+}
+
+.font-space-body {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #0f1115;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #ef4444, #7f1d1d);
+  border-radius: 10px;
+}
