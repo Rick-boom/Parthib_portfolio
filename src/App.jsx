@@ -40,8 +40,9 @@ function AnalogKnob({ label, options, value, setValue }) {
   return (
     <div className="flex flex-col items-center gap-3">
       <motion.div
+        whileTap={{ scale: 0.97 }}
         animate={{ rotate: angle }}
-        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+        transition={{ type: "spring", stiffness: 700, damping: 10, mass: 0.5 }}
         className="relative w-24 h-24 rounded-full bg-gradient-to-b from-[#2B303B] to-[#161A22] border border-[#334155] shadow-[0_4px_10px_rgba(0,0,0,0.5),inset_0_2px_4px_rgba(255,255,255,0.1)] flex items-center justify-center cursor-pointer group"
         onClick={() => setValue((value + 1) % options.length)}
       >
