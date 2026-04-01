@@ -389,17 +389,25 @@ export default function Portfolio() {
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full bg-[#161A22] border border-[#334155] focus:border-[#F43325] rounded p-2 text-white outline-none placeholder-[#64748B] transition-colors resize-none"
                   />
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-3 mt-4">
                     <button
                       onClick={handleContactSubmit}
-                      className="px-6 py-2 bg-[#F43325] text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-white hover:text-[#F43325] transition-colors"
+                      className="w-full px-6 py-2 bg-[#F43325] text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-white hover:text-[#F43325] transition-colors"
                     >
                       TRANSMIT DATA
                     </button>
+                    <a
+                      href="https://wa.me/919330616676?text=Hi%20Parthib%21%20I%20am%20reaching%20out%20from%20your%20portfolio."
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full px-6 py-2 border border-[#25D366] text-[#25D366] text-xs font-bold uppercase tracking-widest rounded hover:bg-[#25D366] hover:text-[#0B0E14] transition-colors text-center"
+                    >
+                      DIRECT WHATSAPP_LINK
+                    </a>
                     {submitted && (
-                      <span className="text-[#10B981] text-xs font-bold animate-pulse">
+                      <div className="text-[#10B981] text-xs font-bold animate-pulse text-center">
                         TRANSMISSION.SUCCESSFUL
-                      </span>
+                      </div>
                     )}
                   </div>
                 </div>
