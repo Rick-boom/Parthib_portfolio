@@ -1,17 +1,68 @@
 @import "tailwindcss";
 
-*, *::before, *::after {
-  box-sizing: border-box;
+@theme {
+  --color-hypr-bg: #0B0E14;
+  --color-hypr-panel: #161A22;
+  --color-hypr-panel-border: #2B303B;
+  --color-hypr-red: #F43325;
+  --color-hypr-red-glow: rgba(244, 51, 37, 0.4);
+  --color-hypr-text: #E2E8F0;
+  --color-hypr-muted: #64748B;
+  
+  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background: #000;
-  color: #fff;
+  background-color: var(--color-hypr-bg);
+  color: var(--color-hypr-text);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+}
+
+/* Custom Utilities for Mission Control aesthetic */
+.scanlines {
+  position: relative;
+}
+.scanlines::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 4px, 6px 100%;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+.panel-screw {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #334155;
+  border-radius: 50%;
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8), 0.5px 0.5px 0px rgba(255,255,255,0.1);
+}
+.screw-tl { top: 8px; left: 8px; }
+.screw-tr { top: 8px; right: 8px; }
+.screw-bl { bottom: 8px; left: 8px; }
+.screw-br { bottom: 8px; right: 8px; }
+
+/* Custom Scrollbar for narrow data panels */
+.custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.2); 
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-hypr-red); 
+  border-radius: 4px;
 }
