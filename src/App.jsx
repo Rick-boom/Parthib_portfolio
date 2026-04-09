@@ -638,7 +638,7 @@ function ContactPanel({ isActive }) {
               {[
                 ["Email", "parthibsaha.11sc2020@gmail.com", "mailto:parthibsaha.11sc2020@gmail.com"],
                 ["WhatsApp", "+91 9330616676", "https://wa.me/919330616676?text=Hi%20Parthib!%20I%20reached%20you%20from%20your%20portfolio."],
-                ["LinkedIn", "linkedin.com/in/parthib-saha", "https://linkedin.com/in/parthib-saha"],
+                ["LinkedIn", "linkedin.com/in/parthib-saha-752a20203", "https://www.linkedin.com/in/parthib-saha-752a20203/"],
               ].map(([label, value, href]) => (
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
                   <div style={{
