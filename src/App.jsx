@@ -306,26 +306,23 @@ function AboutPanel({ isActive }) {
       <SectionLabel text="About · परिचय" />
 
       <div className="flex flex-col md:grid md:grid-cols-2 gap-10 md:gap-[6vw] items-center h-fit md:h-full">
-        <div style={{ display: "flex", justifyContent: "center" }} className="order-2 md:order-1">
-          <PatachitraUnroll isActive={isActive}>
-            <div style={{ position: "relative", width: 260, height: 260 }}>
-              
-              {/* Massive fully visible 240% clamped Mandala */}
-              <div style={{ position: "absolute", top: "-70%", left: "-70%", width: "240%", height: "240%", pointerEvents: "none", borderRadius: "50%", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", WebkitMaskImage: "radial-gradient(circle, black 60%, transparent 70%)", maskImage: "radial-gradient(circle, black 60%, transparent 70%)" }}>
-                <img src="/mandala.png" alt="decoration" style={{ width: "100%", height: "100%", objectFit: "contain", opacity: 0.18, transformOrigin: "50% 50%", animation: "spin-slow 25s linear infinite", mixBlendMode: "multiply" }} />
-              </div>
+        <div style={{ display: "flex", justifyContent: "center", position: "relative" }} className="order-2 md:order-1">
+          {/* Freed from PatachitraUnroll clipPath to avoid square shear */}
+          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 620, height: 620, pointerEvents: "none", borderRadius: "50%", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", WebkitMaskImage: "radial-gradient(circle, black 60%, transparent 70%)", maskImage: "radial-gradient(circle, black 60%, transparent 70%)", zIndex: 0 }}>
+            <img src="/mandala.png" alt="decoration" style={{ width: "100%", height: "100%", objectFit: "contain", opacity: 0.18, transformOrigin: "50% 50%", animation: "spin-slow 25s linear infinite", mixBlendMode: "multiply" }} />
+          </div>
 
-              <div style={{
-                width: 260, height: 260, borderRadius: "50%",
-                background: "linear-gradient(135deg, var(--saffron) 0%, var(--turmeric) 50%, var(--henna) 100%)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: "6rem", color: "var(--parchment)", fontFamily: "'Cormorant Garamond', serif",
-                fontWeight: 600, boxShadow: "0 8px 40px rgba(232,101,26,0.3)",
-                border: "4px solid var(--parchment)",
-                position: "relative", zIndex: 1,
-              }}>
-                PS
-              </div>
+          <PatachitraUnroll isActive={isActive}>
+            <div style={{
+              width: 260, height: 260, borderRadius: "50%",
+              background: "linear-gradient(135deg, var(--saffron) 0%, var(--turmeric) 50%, var(--henna) 100%)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "6rem", color: "var(--parchment)", fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 600, boxShadow: "0 8px 40px rgba(232,101,26,0.3)",
+              border: "4px solid var(--parchment)",
+              position: "relative", zIndex: 1,
+            }}>
+              PS
             </div>
           </PatachitraUnroll>
         </div>
@@ -719,15 +716,17 @@ function ColophonPanel({ isActive }) {
       <MadhubaniTop />
       <MadhubaniBottom />
 
+      {/* Freed from PatachitraUnroll clipPath to avoid straight horizontal cutoffs */}
+      <div style={{ position: "absolute", top: "45%", left: "50%", transform: "translate(-50%, -50%)", width: 340, height: 340, pointerEvents: "none", borderRadius: "50%", overflow: "hidden", display: "flex", WebkitMaskImage: "radial-gradient(circle, black 60%, transparent 70%)", maskImage: "radial-gradient(circle, black 60%, transparent 70%)", zIndex: 0 }}>
+         <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain", transformOrigin: "50% 50%", animation: "spin-slow 20s linear infinite", opacity: 0.22, mixBlendMode: "multiply" }} />
+      </div>
+
       <PatachitraUnroll isActive={isActive}>
-        <div style={{ textAlign: "center", position: "relative" }}>
+        <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
           
+          {/* Spacer to keep layout identical */}
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
-            {/* Huge full-visibility Clamped Circle Mandala */}
             <div style={{ position: "relative", width: 120, height: 120 }}>
-              <div style={{ position: "absolute", top: -80, left: -80, right: -80, bottom: -80, pointerEvents: "none", borderRadius: "50%", overflow: "hidden", WebkitMaskImage: "radial-gradient(circle, black 60%, transparent 70%)", maskImage: "radial-gradient(circle, black 60%, transparent 70%)" }}>
-                <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain", transformOrigin: "50% 50%", animation: "spin-slow 20s linear infinite", opacity: 0.22, mixBlendMode: "multiply" }} />
-              </div>
             </div>
           </div>
 
