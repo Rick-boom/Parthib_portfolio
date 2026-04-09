@@ -209,7 +209,7 @@ body::before {
   .outer-wrapper {
     overflow-x: hidden;
     overflow-y: auto;
-    height: auto;
+    height: 100dvh;
   }
   .scroll-track {
     flex-direction: column;
