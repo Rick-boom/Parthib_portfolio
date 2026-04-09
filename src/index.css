@@ -1,68 +1,240 @@
 @import "tailwindcss";
 
-@theme {
-  --color-hypr-bg: #0B0E14;
-  --color-hypr-panel: #161A22;
-  --color-hypr-panel-border: #2B303B;
-  --color-hypr-red: #F43325;
-  --color-hypr-red-glow: rgba(244, 51, 37, 0.4);
-  --color-hypr-text: #E2E8F0;
-  --color-hypr-muted: #64748B;
-  
-  --font-mono: 'Space Mono', monospace;
-  --font-sans: 'Inter', sans-serif;
+/* ─── Google Fonts ─────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* ─── CSS Custom Properties ─────────────────────────── */
+:root {
+  --parchment:    #f5f0e8;
+  --parchment-dark: #ede5d5;
+  --parchment-deep: #ddd0ba;
+  --saffron:      #E8651A;
+  --saffron-light:#f4884a;
+  --henna:        #9B2335;
+  --turmeric:     #C8860A;
+  --indigo-ink:   #1A2744;
+  --forest:       #2D5016;
+  --gold:         #B8860B;
+  --cream-text:   #3D2B1F;
+  --muted-text:   #7A5C40;
 }
+
+/* ─── Base ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--color-hypr-bg);
-  color: var(--color-hypr-text);
-  font-family: var(--font-sans);
+  background: var(--parchment);
+  color: var(--cream-text);
+  font-family: 'EB Garamond', 'Noto Serif', Georgia, serif;
   overflow-x: hidden;
+  cursor: default;
 }
 
-#root {
-  width: 100%;
-  min-height: 100vh;
-}
-
-/* Custom Utilities for Mission Control aesthetic */
-.scanlines {
-  position: relative;
-}
-.scanlines::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  background-size: 100% 4px, 6px 100%;
-  z-index: 50;
+/* ─── Parchment Texture Overlay ─────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
-  opacity: 0.15;
+  z-index: 999;
+  opacity: 0.5;
 }
 
-.panel-screw {
+/* ─── Horizontal Scroll Container ────────────────────── */
+.scroll-track {
+  display: flex;
+  flex-direction: row;
+  height: 100dvh;
+  width: max-content;
+  align-items: stretch;
+}
+
+.outer-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 100dvh;
+  width: 100vw;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.outer-wrapper::-webkit-scrollbar { display: none; }
+.outer-wrapper { scrollbar-width: none; }
+
+/* ─── Panels ─────────────────────────────────────────── */
+.panel {
+  height: 100dvh;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ─── Divider Lines (like scroll borders) ───────────── */
+.panel-divider {
   position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 0%, var(--saffron) 20%, var(--turmeric) 50%, var(--saffron) 80%, transparent 100%);
+  opacity: 0.5;
+}
+
+/* ─── Decorative corner ornament ────────────────────── */
+.ornament {
+  display: inline-block;
+  color: var(--saffron);
+  font-size: 1.2em;
+  opacity: 0.7;
+}
+
+/* ─── Madhubani border band ─────────────────────────── */
+.madhubani-band {
+  position: absolute;
+  left: 0; right: 0;
+  height: 80px;
+  background-image: url('/madhubani_banner.png');
+  background-size: auto 100%;
+  background-repeat: repeat-x;
+  opacity: 0.25;
+}
+
+/* ─── Section labels (like Japanese tate-yoko) ──────── */
+.section-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted-text);
+  opacity: 0.6;
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ─── Skill bars ─────────────────────────────────────── */
+.skill-bar-track {
+  height: 4px;
+  background: var(--parchment-deep);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--saffron), var(--turmeric));
+  transform-origin: left;
+}
+
+/* ─── Timeline dot ───────────────────────────────────── */
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--saffron);
+  border: 2px solid var(--parchment);
+  box-shadow: 0 0 0 2px var(--saffron);
+  flex-shrink: 0;
+}
+
+/* ─── Nav dots ───────────────────────────────────────── */
+.nav-dot {
   width: 6px;
   height: 6px;
-  background-color: #334155;
   border-radius: 50%;
-  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8), 0.5px 0.5px 0px rgba(255,255,255,0.1);
+  background: var(--muted-text);
+  opacity: 0.4;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
-.screw-tl { top: 8px; left: 8px; }
-.screw-tr { top: 8px; right: 8px; }
-.screw-bl { bottom: 8px; left: 8px; }
-.screw-br { bottom: 8px; right: 8px; }
+.nav-dot.active {
+  background: var(--saffron);
+  opacity: 1;
+  transform: scale(1.5);
+}
 
-/* Custom Scrollbar for narrow data panels */
-.custom-scroll::-webkit-scrollbar {
-  width: 4px;
+/* ─── Contact input ──────────────────────────────────── */
+.india-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--parchment-deep);
+  outline: none;
+  font-family: 'EB Garamond', serif;
+  font-size: 1rem;
+  color: var(--cream-text);
+  padding: 6px 0;
+  width: 100%;
+  transition: border-color 0.3s;
 }
-.custom-scroll::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.2); 
+.india-input::placeholder { color: var(--muted-text); opacity: 0.7; }
+.india-input:focus { border-bottom-color: var(--saffron); }
+
+/* ─── Button ─────────────────────────────────────────── */
+.india-btn {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  background: var(--saffron);
+  border: none;
+  padding: 10px 28px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
 }
-.custom-scroll::-webkit-scrollbar-thumb {
-  background: var(--color-hypr-red); 
-  border-radius: 4px;
+.india-btn:hover { background: var(--henna); transform: translateY(-1px); }
+
+/* ─── Animations ─────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes drawLine {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.animate-fadein { animation: fadeInUp 0.8s ease both; }
+.animate-fadein-2 { animation: fadeInUp 0.8s ease 0.2s both; }
+.animate-fadein-3 { animation: fadeInUp 0.8s ease 0.4s both; }
+.animate-fadein-4 { animation: fadeInUp 0.8s ease 0.6s both; }
+.spin-slow { animation: spin-slow 20s linear infinite; }
+
+/* ─── Responsive fallback: vertical scroll on mobile ── */
+@media (max-width: 768px) {
+  .outer-wrapper {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+  }
+  .scroll-track {
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+  }
+  .panel {
+    height: auto;
+    min-height: 100dvh;
+    width: 100% !important;
+    scroll-snap-align: start;
+  }
+  .section-label { display: none; }
 }

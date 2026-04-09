@@ -1,423 +1,801 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import "./App.css"; // (If there are old styles, this preserves them, but we rely on index.css)
+import React, { useState, useEffect, useRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import "./index.css";
 
-// --- Skeuomorphic Micro-Components ---
-function Screw() {
-  return <div className="panel-screw"></div>;
+/* ─────────────────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────────────────── */
+const SKILLS = [
+  { name: "HTML / CSS", level: 92 },
+  { name: "JavaScript", level: 80 },
+  { name: "React", level: 75 },
+  { name: "Python", level: 85 },
+  { name: "C / C++", level: 78 },
+  { name: "Machine Learning", level: 72 },
+  { name: "SQL", level: 70 },
+  { name: "Data Structures & Algorithms", level: 76 },
+];
+
+const EDUCATION = [
+  {
+    year: "2023 – Present",
+    title: "B.Tech in Artificial Intelligence",
+    place: "Birla Institute of Technology, Mesra",
+    detail: "CGPA: 8.1 · Mesra, Jharkhand",
+  },
+  {
+    year: "2021 – 2022",
+    title: "Class XII",
+    place: "Vivekananda Academy",
+    detail: "88.8% · Serampore, West Bengal",
+  },
+  {
+    year: "2010 – 2020",
+    title: "Class X",
+    place: "Gospel Home School",
+    detail: "89% · Rishra, West Bengal",
+  },
+];
+
+const PROJECTS = [
+  {
+    title: "Personal Portfolio Website",
+    year: "2024",
+    tags: ["React", "CSS", "GitHub Pages"],
+    desc: "Designed and deployed a personal portfolio with a mission-control aesthetic. Showcases skills, resume, and links. Built with React and deployed via GitHub Pages.",
+    link: "#",
+  },
+  {
+    title: "CGPA Prediction — Machine Learning",
+    year: "2024",
+    tags: ["Python", "scikit-learn", "Regression"],
+    desc: "Built a regression pipeline in Python and scikit-learn to predict academic CGPA. Applied data preprocessing, feature selection, Linear Regression, and Decision Tree models. Visualised results with matplotlib and seaborn.",
+    link: "#",
+  },
+  {
+    title: "Study Analyser",
+    year: "2023",
+    tags: ["Python", "Pandas", "Data Analysis"],
+    desc: "An analytics tool that processes academic performance records and generates insights on study patterns, helping students optimise their revision strategy.",
+    link: "#",
+  },
+  {
+    title: "Face Forgery Detection",
+    year: "2024",
+    tags: ["Deep Learning", "CV", "Python"],
+    desc: "Explored computer-vision techniques to classify real vs. manipulated facial images. Leveraged transfer learning on CNN architectures for robust forgery detection.",
+    link: "#",
+  },
+];
+
+const JOURNEY = [
+  { year: "2003", text: "Born in West Bengal, India — surrounded by the colours of Durga Puja and the rivers of Bengal." },
+  { year: "2020", text: "Cleared Class X with 89%. Developed a curiosity for computers and logical thinking." },
+  { year: "2022", text: "Scored 88.8% in Class XII. Chose technology as a career direction." },
+  { year: "2023", text: "Entered Birla Institute of Technology, Mesra — pursuing B.Tech in Artificial Intelligence." },
+  { year: "2024", text: "Built first ML projects, deployed a portfolio, and fell in love with frontend design." },
+  { year: "Now", text: "Aspiring Frontend Designer crafting immersive interfaces, one scroll at a time." },
+];
+
+/* ─────────────────────────────────────────────────────────
+   SMALL COMPONENTS
+───────────────────────────────────────────────────────── */
+function Divider() {
+  return <div className="panel-divider" />;
 }
 
-function Panel({ title, children, className = "" }) {
-  return (
-    <motion.div
-      className={`relative bg-[#161A22] border border-[#2B303B] rounded-[16px] p-5 lg:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.03)] overflow-hidden ${className}`}
-      whileHover={{ scale: 1.01, zIndex: 10 }}
-      transition={{ type: "spring", stiffness: 150, damping: 15 }}
-    >
-      <div className="absolute inset-0 scanlines pointer-events-none opacity-20 z-0" />
-      
-      {/* 4 Corner Screws for Hardware Vibe */}
-      <div className="absolute screw-tl"><Screw /></div>
-      <div className="absolute screw-tr"><Screw /></div>
-      <div className="absolute screw-bl"><Screw /></div>
-      <div className="absolute screw-br"><Screw /></div>
+function MadhubaniTop() {
+  return <div className="madhubani-band" style={{ top: 0 }} />;
+}
+function MadhubaniBottom() {
+  return <div className="madhubani-band" style={{ bottom: 0 }} />;
+}
 
-      <div className="relative z-10 flex flex-col h-full">
-        <div className="text-[10px] md:text-xs text-[#64748B] mb-4 tracking-[0.2em] font-mono uppercase bg-[#0B0E14] inline-block px-2 py-1 rounded w-max border border-[#2B303B]">
-          [{title}]
-        </div>
-        <div className="flex-1">
-          {children}
-        </div>
-      </div>
-    </motion.div>
+function SectionLabel({ text }) {
+  return <div className="section-label">{text}</div>;
+}
+
+function OrnamentLine() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "18px 0" }}>
+      <div style={{ flex: 1, height: 1, background: "linear-gradient(to right, transparent, var(--saffron))", opacity: 0.5, transformOrigin: "left", animation: "drawLine 1s ease 0.3s both" }} />
+      <span style={{ color: "var(--saffron)", fontSize: "1.2em", lineHeight: 1 }}>✦</span>
+      <div style={{ flex: 1, height: 1, background: "linear-gradient(to left, transparent, var(--saffron))", opacity: 0.5 }} />
+    </div>
   );
 }
 
-function AnalogKnob({ label, options, value, setValue }) {
-  const angle = value * (360 / options.length);
-
+function SkillBar({ name, level, delay = 0 }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
   return (
-    <div className="flex flex-col items-center gap-3">
-      <motion.div
-        whileTap={{ scale: 0.97 }}
-        animate={{ rotate: angle }}
-        transition={{ type: "spring", stiffness: 700, damping: 10, mass: 0.5 }}
-        className="relative w-24 h-24 rounded-full bg-gradient-to-b from-[#2B303B] to-[#161A22] border border-[#334155] shadow-[0_4px_10px_rgba(0,0,0,0.5),inset_0_2px_4px_rgba(255,255,255,0.1)] flex items-center justify-center cursor-pointer group"
-        onClick={() => setValue((value + 1) % options.length)}
-      >
-        {/* Inner black textured dial */}
-        <div className="absolute w-20 h-20 rounded-full bg-[#0B0E14] shadow-[inset_0_4px_10px_rgba(0,0,0,0.8)] border border-[#1e232c] flex items-center justify-center">
-           {/* Center rivet */}
-           <div className="w-4 h-4 rounded-full bg-gradient-to-b from-[#334155] to-[#161A22] shadow-inner" />
-        </div>
-        {/* Red Indicator Needle */}
-        <div className="absolute w-1.5 h-10 bg-[#F43325] rounded -translate-y-[22px] shadow-[0_0_10px_rgba(244,51,37,0.8)] group-hover:bg-[#ff5544] transition-colors" />
-      </motion.div>
-      <div className="text-center font-mono">
-        <div className="text-[10px] text-[#64748B] tracking-widest uppercase">{label}</div>
-        <div className="text-[11px] text-[#F43325] tracking-wider font-bold mt-1 bg-[#2B303B]/30 px-2 py-1 rounded border border-[#F43325]/20">
-          {options[value]}
-        </div>
+    <div ref={ref} style={{ marginBottom: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontFamily: "'Cormorant Garamond', serif", fontSize: "0.95rem", letterSpacing: "0.04em" }}>
+        <span style={{ color: "var(--cream-text)" }}>{name}</span>
+        <span style={{ color: "var(--muted-text)", fontSize: "0.85em" }}>{level}%</span>
+      </div>
+      <div className="skill-bar-track">
+        <motion.div
+          className="skill-bar-fill"
+          initial={{ scaleX: 0 }}
+          animate={inView ? { scaleX: level / 100 } : { scaleX: 0 }}
+          transition={{ duration: 1, ease: "easeOut", delay: delay + 0.2 }}
+        />
       </div>
     </div>
   );
 }
 
-function IndustrialLiftOff({ onClick, active }) {
+function Tag({ text }) {
   return (
-    <motion.button
-      whileTap={{ scale: 0.95, y: 2 }}
-      whileHover={{ scale: 1.05 }}
-      onClick={onClick}
-      className={`relative w-32 h-32 md:w-36 md:h-36 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ${active ? 'shadow-[0_0_40px_rgba(244,51,37,0.6)]' : 'shadow-[0_4px_10px_rgba(0,0,0,0.8)]'}`}
-      style={{
-        background: 'linear-gradient(135deg, #2B303B 0%, #0B0E14 100%)',
-        border: '3px solid #334155',
-      }}
-    >
-      <div 
-        className={`absolute inset-2 rounded-full transition-all duration-500 ${active ? 'bg-[#F43325] shadow-[inset_0_4px_15px_rgba(255,255,255,0.3)]' : 'bg-[#1e2229] shadow-[inset_0_4px_10px_rgba(0,0,0,0.6)]'}`}
-      ></div>
-      <span className={`relative z-10 font-mono font-bold text-sm tracking-[0.2em] pointer-events-none transition-colors duration-500 ${active ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]' : 'text-[#64748B]'}`}>
-        LAUNCH
-      </span>
-    </motion.button>
+    <span style={{
+      fontFamily: "'Cormorant Garamond', serif",
+      fontSize: "0.7rem",
+      letterSpacing: "0.12em",
+      textTransform: "uppercase",
+      color: "var(--saffron)",
+      border: "1px solid var(--saffron)",
+      padding: "2px 8px",
+      marginRight: 6,
+      marginBottom: 4,
+      display: "inline-block",
+      opacity: 0.85,
+    }}>{text}</span>
   );
 }
 
-// --- Main App ---
-export default function Portfolio() {
-  const [fundingFlip, setFundingFlip] = useState(false);
-  const [fuel, setFuel] = useState(0);
-  const [tech, setTech] = useState(0);
-  const [pump, setPump] = useState(0);
-  
-  const [launcher, setLauncher] = useState("");
-  const [status, setStatus] = useState("AWAITING VERIFICATION_");
-  const [ignition, setIgnition] = useState(false);
-  const [launched, setLaunched] = useState(false);
-  
-  const [roadmapVisible, setRoadmapVisible] = useState(false);
-  const [projectsVisible, setProjectsVisible] = useState(false);
-  const [skillsVisible, setSkillsVisible] = useState(false);
-  const [contactVisible, setContactVisible] = useState(false);
+/* ─────────────────────────────────────────────────────────
+   NAV DOTS (bottom center)
+───────────────────────────────────────────────────────── */
+function NavDots({ sections, active, onDotClick }) {
+  return (
+    <div style={{
+      position: "fixed",
+      bottom: 28,
+      left: "50%",
+      transform: "translateX(-50%)",
+      display: "flex",
+      gap: 10,
+      zIndex: 100,
+    }}>
+      {sections.map((s, i) => (
+        <div
+          key={i}
+          className={`nav-dot${active === i ? " active" : ""}`}
+          onClick={() => onDotClick(i)}
+          title={s}
+        />
+      ))}
+    </div>
+  );
+}
 
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [submitted, setSubmitted] = useState(false);
-  
-  // Typed system boot text
-  const [typedText, setTypedText] = useState("");
-  const fullText = "> SYSTEM INITIALIZED. WELCOME TO MISSION CONTROL.";
+/* ─────────────────────────────────────────────────────────
+   PANELS
+───────────────────────────────────────────────────────── */
 
+// 1. HERO
+function HeroPanel() {
+  const [tick, setTick] = useState(0);
   useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      setTypedText(fullText.slice(0, index + 1));
-      index++;
-      if (index === fullText.length) clearInterval(interval);
-    }, 40);
-    return () => clearInterval(interval);
+    const id = setInterval(() => setTick(t => t + 1), 80);
+    return () => clearInterval(id);
   }, []);
+  const phrases = ["Frontend Designer", "AI Engineer", "Creative Coder", "Problem Solver"];
+  const phrase = phrases[Math.floor(tick / 30) % phrases.length];
+  const charCount = tick % 30;
+  const typed = phrase.slice(0, charCount);
 
-  // System secrets logic
-  useEffect(() => {
-    setRoadmapVisible(fuel === 0 && tech === 0 && pump === 1);
-    setProjectsVisible(fuel === 1 && tech === 0 && pump === 2);
-    setSkillsVisible(fuel === 2 && tech === 1 && pump === 3);
-    setContactVisible(fuel === 0 && tech === 1 && pump === 3);
-  }, [fuel, tech, pump]);
+  return (
+    <div
+      className="panel"
+      style={{ width: "100vw", background: "var(--parchment)", padding: "0 8vw", position: "relative" }}
+      id="panel-0"
+    >
+      <MadhubaniTop />
+      <MadhubaniBottom />
+      <SectionLabel text="Portfolio · Parthib Saha" />
 
-  const validateLaunch = () => {
-    if (launcher === "3468") {
-      setStatus("ACCESS_GRANTED :: SEQUENCE ARMED");
-    } else {
-      setStatus("ACCESS_DENIED :: INVALID OVERRIDE");
-    }
-  };
+      {/* Mandala decoration right side */}
+      <div style={{ position: "absolute", right: "5vw", top: "50%", transform: "translateY(-50%)", opacity: 0.12 }}>
+        <img src="/mandala.png" alt="" style={{ width: 400, height: 400, animation: "spin-slow 30s linear infinite" }} />
+      </div>
 
-  const triggerLaunch = () => {
-    if (status.includes("GRANTED")) {
-      setIgnition(true);
-      setStatus("IGNITION SEQUENCE IN PROGRESS...");
-      setTimeout(() => {
-        setIgnition(false);
-        setLaunched(true);
-        setStatus("LIFTOFF COMPLETE. ENTRANT EN ROUTE.");
-      }, 3000);
-    }
-  };
+      <div style={{ position: "relative", zIndex: 2 }}>
+        {/* Om / greeting */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          style={{ fontFamily: "'EB Garamond', serif", fontSize: "1rem", letterSpacing: "0.3em", color: "var(--saffron)", textTransform: "uppercase", marginBottom: 20, opacity: 0.8 }}
+        >
+          ॐ &nbsp;·&nbsp; Namaste
+        </motion.div>
 
-  const handleContactSubmit = async () => {
-    if (!formData.name || !formData.email || !formData.message) return;
-    
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.1, delay: 0.2 }}
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(3rem, 8vw, 7rem)",
+            fontWeight: 300,
+            lineHeight: 1.05,
+            color: "var(--indigo-ink)",
+            letterSpacing: "-0.01em",
+            margin: 0,
+          }}
+        >
+          Parthib<br />
+          <em style={{ color: "var(--saffron)", fontStyle: "italic" }}>Saha</em>
+        </motion.h1>
+
+        <OrnamentLine />
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          style={{
+            fontFamily: "'EB Garamond', serif",
+            fontSize: "clamp(1rem, 2.2vw, 1.5rem)",
+            color: "var(--muted-text)",
+            letterSpacing: "0.05em",
+            marginBottom: 8,
+          }}
+        >
+          Aspiring&nbsp;
+          <span style={{ color: "var(--henna)", fontStyle: "italic" }}>
+            {typed}
+            <span style={{ animation: "blink 1s step-end infinite", opacity: charCount % 2 === 0 ? 1 : 0 }}>|</span>
+          </span>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          style={{ fontFamily: "'EB Garamond', serif", fontSize: "1rem", color: "var(--muted-text)", maxWidth: 420, lineHeight: 1.7, marginTop: 12 }}
+        >
+          B.Tech AI student at BIT Mesra · West Bengal, India.<br />
+          Building beautiful interfaces inspired by the colours and patterns of Bharat.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1.1 }}
+          style={{ display: "flex", gap: 16, marginTop: 36, flexWrap: "wrap" }}
+        >
+          <a href="#panel-4" style={{ textDecoration: "none" }}>
+            <button className="india-btn">View Projects</button>
+          </a>
+          <a href="#panel-6" style={{ textDecoration: "none" }}>
+            <button className="india-btn" style={{ background: "transparent", color: "var(--saffron)", border: "1px solid var(--saffron)" }}>
+              Contact Me
+            </button>
+          </a>
+        </motion.div>
+      </div>
+      <Divider />
+    </div>
+  );
+}
+
+// 2. ABOUT
+function AboutPanel() {
+  return (
+    <div className="panel" style={{ width: "80vw", background: "var(--parchment-dark)", padding: "80px 7vw", position: "relative" }} id="panel-1">
+      <MadhubaniTop />
+      <MadhubaniBottom />
+      <SectionLabel text="About · परिचय" />
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6vw", alignItems: "center", height: "100%" }}>
+        {/* Left – portrait placeholder with mandala */}
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ position: "relative", width: 260, height: 260 }}>
+            <img src="/mandala.png" alt="decoration" style={{ position: "absolute", inset: -30, width: "calc(100%+60px)", height: "calc(100%+60px)", opacity: 0.18, animation: "spin-slow 25s linear infinite" }} />
+            <div style={{
+              width: 260, height: 260, borderRadius: "50%",
+              background: "linear-gradient(135deg, var(--saffron) 0%, var(--turmeric) 50%, var(--henna) 100%)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "6rem", color: "var(--parchment)", fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 600, boxShadow: "0 8px 40px rgba(232,101,26,0.3)",
+              border: "4px solid var(--parchment)",
+              position: "relative", zIndex: 1,
+            }}>
+              PS
+            </div>
+          </div>
+        </div>
+
+        {/* Right – text */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9 }}
+          viewport={{ once: true }}
+        >
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.75rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 10 }}>
+            About Me
+          </div>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(2rem, 4vw, 3.2rem)", fontWeight: 300, color: "var(--indigo-ink)", margin: "0 0 16px" }}>
+            Rooted in Bengal,<br /><em>dreaming in pixels.</em>
+          </h2>
+          <OrnamentLine />
+          <p style={{ fontFamily: "'EB Garamond', serif", fontSize: "1.05rem", color: "var(--muted-text)", lineHeight: 1.85, marginBottom: 14 }}>
+            I'm Parthib Saha — an AI engineering student who believes that great software is
+            as much an art form as a technical discipline. Growing up in the culturally rich
+            heartland of West Bengal, I've always been drawn to things of beauty: the intricate
+            geometry of Madhubani art, the vibrant chaos of Kolkata's streets, the quiet
+            precision of a perfectly tuned algorithm.
+          </p>
+          <p style={{ fontFamily: "'EB Garamond', serif", fontSize: "1.05rem", color: "var(--muted-text)", lineHeight: 1.85 }}>
+            Today, I channel that sensibility into frontend design and machine learning — building
+            interfaces that don't just function, but <em>feel.</em>
+          </p>
+
+          <div style={{ marginTop: 24, display: "flex", gap: 24, flexWrap: "wrap" }}>
+            {[["CGPA", "8.1"], ["Projects", "4+"], ["Year", "2nd"]].map(([k, v]) => (
+              <div key={k} style={{ textAlign: "center" }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2.2rem", fontWeight: 600, color: "var(--saffron)" }}>{v}</div>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted-text)" }}>{k}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+      <Divider />
+    </div>
+  );
+}
+
+// 3. JOURNEY / TIMELINE
+function JourneyPanel() {
+  return (
+    <div className="panel" style={{ width: "90vw", background: "var(--parchment)", padding: "80px 8vw", position: "relative" }} id="panel-2">
+      <MadhubaniTop />
+      <MadhubaniBottom />
+      <SectionLabel text="Journey · यात्रा" />
+
+      <div style={{ display: "flex", gap: "8vw", alignItems: "flex-start", height: "100%" }}>
+        <div style={{ paddingTop: 60 }}>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.75rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 10 }}>
+            My Story
+          </div>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 300, color: "var(--indigo-ink)", margin: "0 0 8px", maxWidth: 280 }}>
+            A journey of<br /><em>a thousand scrolls.</em>
+          </h2>
+          <OrnamentLine />
+          <p style={{ fontFamily: "'EB Garamond', serif", color: "var(--muted-text)", lineHeight: 1.8, fontSize: "0.98rem", maxWidth: 260 }}>
+            Every great design begins with a story. Here is mine — unfolding like a Bengali patachitra scroll, one chapter at a time.
+          </p>
+        </div>
+
+        {/* Timeline */}
+        <div style={{ flex: 1, position: "relative", paddingTop: 30, overflowY: "auto", maxHeight: "70vh" }}>
+          {/* Vertical line */}
+          <div style={{ position: "absolute", left: 4, top: 0, bottom: 0, width: 1.5, background: "linear-gradient(to bottom, var(--saffron), var(--turmeric), transparent)", opacity: 0.4 }} />
+
+          {JOURNEY.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              viewport={{ once: true }}
+              style={{ display: "flex", gap: 20, marginBottom: 36, paddingLeft: 24, position: "relative" }}
+            >
+              <div className="timeline-dot" style={{ position: "absolute", left: -1 }} />
+              <div>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.72rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 4 }}>
+                  {item.year}
+                </div>
+                <div style={{ fontFamily: "'EB Garamond', serif", fontSize: "1rem", color: "var(--cream-text)", lineHeight: 1.7 }}>
+                  {item.text}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      <Divider />
+    </div>
+  );
+}
+
+// 4. SKILLS
+function SkillsPanel() {
+  return (
+    <div className="panel" style={{ width: "85vw", background: "var(--parchment-dark)", padding: "80px 8vw", position: "relative" }} id="panel-3">
+      <MadhubaniTop />
+      <MadhubaniBottom />
+      <SectionLabel text="Skills · कौशल" />
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6vw", alignItems: "start", paddingTop: 20 }}>
+        <div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.75rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 10 }}>
+            Technical Skills
+          </div>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 300, color: "var(--indigo-ink)", margin: "0 0 16px" }}>
+            The threads of<br /><em>my craft.</em>
+          </h2>
+          <OrnamentLine />
+          <p style={{ fontFamily: "'EB Garamond', serif", color: "var(--muted-text)", lineHeight: 1.8, fontSize: "0.98rem", marginBottom: 28 }}>
+            Like the intricate weave of a Banarasi saree, each skill interlocks with the next — building something greater than its individual threads.
+          </p>
+
+          <div style={{ padding: "20px 24px", background: "var(--parchment)", border: "1px solid var(--parchment-deep)", borderRadius: 2 }}>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.72rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted-text)", marginBottom: 16 }}>
+              Also Proficient In
+            </div>
+            {["Competitive Programming · LeetCode", "Data Preprocessing & Feature Engineering", "Data Visualisation · matplotlib & seaborn", "UI/UX Design Principles", "Git & Version Control"].map((item, i) => (
+              <div key={i} style={{ fontFamily: "'EB Garamond', serif", fontSize: "0.95rem", color: "var(--cream-text)", padding: "6px 0", borderBottom: "1px solid var(--parchment-deep)", display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ color: "var(--saffron)", fontSize: "0.7em" }}>✦</span> {item}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ paddingTop: 10 }}>
+          {SKILLS.map((s, i) => <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 0.07} />)}
+        </div>
+      </div>
+      <Divider />
+    </div>
+  );
+}
+
+// 5. PROJECTS
+function ProjectsPanel() {
+  const [hovered, setHovered] = useState(null);
+  return (
+    <div className="panel" style={{ width: "100vw", background: "var(--parchment)", padding: "80px 6vw", position: "relative" }} id="panel-4">
+      <MadhubaniTop />
+      <MadhubaniBottom />
+      <SectionLabel text="Projects · परियोजनाएँ" />
+
+      <div style={{ paddingTop: 10 }}>
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.75rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 10 }}>
+          Selected Works
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 300, color: "var(--indigo-ink)", margin: "0 0 8px" }}>
+          Things I have<br /><em>built with care.</em>
+        </h2>
+        <OrnamentLine />
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20, marginTop: 8 }}>
+        {PROJECTS.map((p, i) => (
+          <motion.div
+            key={i}
+            onHoverStart={() => setHovered(i)}
+            onHoverEnd={() => setHovered(null)}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: i * 0.1 }}
+            viewport={{ once: true }}
+            style={{
+              padding: "24px 28px",
+              border: `1px solid ${hovered === i ? "var(--saffron)" : "var(--parchment-deep)"}`,
+              background: hovered === i ? "rgba(232,101,26,0.04)" : "var(--parchment-dark)",
+              transition: "all 0.35s ease",
+              cursor: "default",
+              position: "relative",
+            }}
+          >
+            {/* Year badge */}
+            <div style={{ position: "absolute", top: 16, right: 20, fontFamily: "'Cormorant Garamond', serif", fontSize: "0.72rem", letterSpacing: "0.12em", color: "var(--muted-text)", opacity: 0.7 }}>
+              {p.year}
+            </div>
+
+            <div style={{ marginBottom: 10 }}>
+              {p.tags.map(t => <Tag key={t} text={t} />)}
+            </div>
+            <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.4rem", fontWeight: 500, color: "var(--indigo-ink)", margin: "0 0 10px" }}>
+              {p.title}
+            </h3>
+            <p style={{ fontFamily: "'EB Garamond', serif", fontSize: "0.95rem", color: "var(--muted-text)", lineHeight: 1.75, margin: 0 }}>
+              {p.desc}
+            </p>
+          </motion.div>
+        ))}
+      </div>
+      <Divider />
+    </div>
+  );
+}
+
+// 6. EDUCATION
+function EducationPanel() {
+  return (
+    <div className="panel" style={{ width: "75vw", background: "var(--parchment-dark)", padding: "80px 7vw", position: "relative" }} id="panel-5">
+      <MadhubaniTop />
+      <MadhubaniBottom />
+      <SectionLabel text="Education · शिक्षा" />
+
+      <div>
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.75rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 10 }}>
+          Academic Path
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(2rem, 3.5vw, 3.2rem)", fontWeight: 300, color: "var(--indigo-ink)", margin: "0 0 16px" }}>
+          Where knowledge<br /><em>found its roots.</em>
+        </h2>
+        <OrnamentLine />
+
+        <div style={{ marginTop: 20, position: "relative" }}>
+          <div style={{ position: "absolute", left: 5, top: 0, bottom: 0, width: 1.5, background: "linear-gradient(to bottom, var(--saffron), transparent)", opacity: 0.4 }} />
+
+          {EDUCATION.map((edu, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: i * 0.15 }}
+              viewport={{ once: true }}
+              style={{ display: "flex", gap: 30, marginBottom: 44, paddingLeft: 28, position: "relative" }}
+            >
+              <div className="timeline-dot" style={{ position: "absolute", left: 0, top: 6 }} />
+              <div>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.72rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 6 }}>
+                  {edu.year}
+                </div>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.3rem", fontWeight: 500, color: "var(--indigo-ink)", marginBottom: 4 }}>
+                  {edu.title}
+                </div>
+                <div style={{ fontFamily: "'EB Garamond', serif", fontSize: "1rem", color: "var(--cream-text)", fontStyle: "italic", marginBottom: 4 }}>
+                  {edu.place}
+                </div>
+                <div style={{ fontFamily: "'EB Garamond', serif", fontSize: "0.9rem", color: "var(--muted-text)" }}>
+                  {edu.detail}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      <Divider />
+    </div>
+  );
+}
+
+// 7. CONTACT
+function ContactPanel() {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.name || !form.email || !form.message) return;
+    setSending(true);
     try {
-      const response = await fetch("/api/contact", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(form),
       });
-      
-      if (response.ok) {
-        setSubmitted(true);
-        setTimeout(() => setSubmitted(false), 4000);
-        setFormData({ name: "", email: "", message: "" });
+      if (res.ok) {
+        setSent(true);
+        setForm({ name: "", email: "", message: "" });
+        setTimeout(() => setSent(false), 5000);
       }
     } catch (err) {
-      console.error("Transmission failed", err);
+      console.error(err);
+    } finally {
+      setSending(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0E14] text-[#E2E8F0] p-4 md:p-8 relative font-sans selection:bg-[#F43325] selection:text-white overflow-x-hidden">
+    <div className="panel" style={{ width: "90vw", background: "var(--parchment)", padding: "80px 8vw", position: "relative" }} id="panel-6">
+      <MadhubaniTop />
+      <MadhubaniBottom />
+      <SectionLabel text="Contact · संपर्क" />
 
-      {/* Atmospheric Dashboard Lighting */}
-      <div className="fixed top-0 left-0 w-full h-[300px] bg-gradient-to-b from-[#1c2433] to-transparent opacity-20 pointer-events-none z-0 mix-blend-screen"></div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "7vw", alignItems: "center", height: "100%" }}>
+        {/* Left */}
+        <div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.75rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 10 }}>
+            Get In Touch
+          </div>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "clamp(2rem, 4vw, 3.5rem)", fontWeight: 300, color: "var(--indigo-ink)", margin: "0 0 16px" }}>
+            Let's create<br /><em>something together.</em>
+          </h2>
+          <OrnamentLine />
+          <p style={{ fontFamily: "'EB Garamond', serif", color: "var(--muted-text)", lineHeight: 1.85, fontSize: "1.02rem", marginBottom: 32 }}>
+            Whether you have a project in mind, an opportunity to share, or simply wish to say namaste — my inbox is always open.
+          </p>
 
-      {/* Ignition Animation (Takes over screen) */}
-      {ignition && (
-        <motion.div
-           initial={{ opacity: 0 }}
-           animate={{ opacity: 1 }}
-           exit={{ opacity: 0 }}
-           className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center mix-blend-screen"
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {[
+              ["Email", "parthibsaha.11sc2020@gmail.com", "mailto:parthibsaha.11sc2020@gmail.com"],
+              ["WhatsApp", "+91 9330616676", "https://wa.me/919330616676?text=Hi%20Parthib!%20I%20reached%20you%20from%20your%20portfolio."],
+              ["LinkedIn", "linkedin.com/in/parthib-saha", "https://linkedin.com/in/parthib-saha"],
+            ].map(([label, value, href]) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 14,
+                  padding: "12px 16px",
+                  border: "1px solid var(--parchment-deep)",
+                  transition: "border-color 0.3s, background 0.3s",
+                  background: "var(--parchment-dark)",
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--saffron)"; e.currentTarget.style.background = "rgba(232,101,26,0.05)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--parchment-deep)"; e.currentTarget.style.background = "var(--parchment-dark)"; }}
+                >
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--saffron)", minWidth: 64 }}>{label}</span>
+                  <span style={{ fontFamily: "'EB Garamond', serif", fontSize: "0.98rem", color: "var(--cream-text)" }}>{value}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Right – Form */}
+        <motion.form
+          onSubmit={handleSubmit}
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          style={{ display: "flex", flexDirection: "column", gap: 24 }}
         >
-          <motion.div animate={{ scale: [1, 1.5, 2, 4], opacity: [0, 0.5, 0.8, 0] }} transition={{ duration: 3, ease: "easeIn" }} className="w-64 h-64 bg-[#F43325] blur-[100px] rounded-full"></motion.div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.75rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--muted-text)", marginBottom: -8 }}>
+            Send A Message
+          </div>
+
+          {[
+            { id: "name", placeholder: "Your Name", type: "text" },
+            { id: "email", placeholder: "Your Email", type: "email" },
+          ].map(({ id, placeholder, type }) => (
+            <input
+              key={id}
+              type={type}
+              placeholder={placeholder}
+              className="india-input"
+              value={form[id]}
+              onChange={e => setForm({ ...form, [id]: e.target.value })}
+            />
+          ))}
+
+          <textarea
+            placeholder="Your Message"
+            className="india-input"
+            rows={5}
+            style={{ resize: "none" }}
+            value={form.message}
+            onChange={e => setForm({ ...form, message: e.target.value })}
+          />
+
+          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+            <button type="submit" className="india-btn" disabled={sending}>
+              {sending ? "Sending..." : "Send Message"}
+            </button>
+            <AnimatePresence>
+              {sent && (
+                <motion.span
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  style={{ fontFamily: "'EB Garamond', serif", fontSize: "0.95rem", color: "var(--forest)", fontStyle: "italic" }}
+                >
+                  Message sent. Dhanyavaad 🙏
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.form>
+      </div>
+    </div>
+  );
+}
+
+// 8. COLOPHON (final scroll panel like on the Japanese site)
+function ColophonPanel() {
+  return (
+    <div className="panel" style={{ width: "50vw", background: "var(--parchment-deep)", padding: "80px 6vw", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }} id="panel-7">
+      <MadhubaniTop />
+      <MadhubaniBottom />
+
+      <div style={{ textAlign: "center" }}>
+        <img src="/mandala.png" alt="" style={{ width: 120, height: 120, opacity: 0.25, animation: "spin-slow 20s linear infinite", marginBottom: 24 }} />
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.72rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 14 }}>
+          ~ समाप्त ~
+        </div>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2.5rem", fontWeight: 300, color: "var(--indigo-ink)", margin: "0 0 8px" }}>
+          Thank you.
+        </h2>
+        <p style={{ fontFamily: "'EB Garamond', serif", fontStyle: "italic", color: "var(--muted-text)", fontSize: "1.1rem", lineHeight: 1.8 }}>
+          "Like the Ganga, the journey continues<br />— always forward, never still."
+        </p>
+        <OrnamentLine />
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.75rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted-text)", marginTop: 12 }}>
+          © 2025 Parthib Saha · West Bengal, India
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────
+   SCROLL HINT
+───────────────────────────────────────────────────────── */
+function ScrollHint() {
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(false), 4000);
+    return () => clearTimeout(timer);
+  }, []);
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          style={{
+            position: "fixed", bottom: 64, right: 40,
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "0.75rem", letterSpacing: "0.2em",
+            textTransform: "uppercase", color: "var(--muted-text)", opacity: 0.7,
+            display: "flex", alignItems: "center", gap: 8,
+            zIndex: 100,
+          }}
+        >
+          <motion.span animate={{ x: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.4 }}>→</motion.span>
+          Scroll to explore
         </motion.div>
       )}
+    </AnimatePresence>
+  );
+}
 
-      {/* TOP NAV/HEADER */}
-      <header className="relative z-10 w-full flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-[#2B303B] pb-6">
-        <div>
-          <h1 className="text-3xl font-mono text-white tracking-widest font-bold">PARTHIB.SAHA</h1>
-          <div className="text-xs font-mono text-[#F43325] mt-2 flex items-center gap-2">
-             <div className="w-2 h-2 rounded-full bg-[#F43325] animate-pulse"></div>
-             {typedText}
-          </div>
+/* ─────────────────────────────────────────────────────────
+   MAIN APP
+───────────────────────────────────────────────────────── */
+const SECTION_NAMES = ["Home", "About", "Journey", "Skills", "Projects", "Education", "Contact", "End"];
+
+export default function App() {
+  const wrapperRef = useRef(null);
+  const [activePanel, setActivePanel] = useState(0);
+
+  // Track active panel via scroll
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const scrollX = el.scrollLeft;
+      const panelWidth = el.scrollWidth / SECTION_NAMES.length;
+      setActivePanel(Math.round(scrollX / panelWidth));
+    };
+    el.addEventListener("scroll", onScroll);
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollToPanel = (i) => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const panel = el.querySelector(`#panel-${i}`);
+    if (panel) panel.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+  };
+
+  return (
+    <>
+      <div className="outer-wrapper" ref={wrapperRef}>
+        <div className="scroll-track">
+          <HeroPanel />
+          <AboutPanel />
+          <JourneyPanel />
+          <SkillsPanel />
+          <ProjectsPanel />
+          <EducationPanel />
+          <ContactPanel />
+          <ColophonPanel />
         </div>
-        
-        {/* The main lift-off trigger */}
-        <div className="mt-6 md:mt-0 flex items-center gap-6">
-          <div className="hidden md:block text-right font-mono text-[#64748B] text-xs">
-            <div>STATUS_TAG: {launched ? "ORBIT" : "PRE-FLIGHT"}</div>
-            <div>OVERRIDE: {status.includes("GRANTED") ? "LOCKED" : "REQ"}</div>
-          </div>
-          <IndustrialLiftOff onClick={triggerLaunch} active={status.includes("GRANTED")} />
-        </div>
-      </header>
-
-      {/* MAIN GRID */}
-      <main className="relative z-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-
-        {/* METRICS PANEL */}
-        <motion.div
-          onClick={() => setFundingFlip(!fundingFlip)}
-          className="col-span-1 xl:col-span-2 cursor-pointer h-full"
-          style={{ perspective: "1500px" }}
-        >
-          <motion.div
-            animate={{ rotateX: fundingFlip ? 180 : 0 }}
-            transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-            style={{ transformStyle: "preserve-3d" }}
-            className="relative h-48 md:h-full w-full"
-          >
-            {/* FRONT */}
-            <div style={{ backfaceVisibility: "hidden" }} className="absolute inset-0">
-              <Panel title="CHANDRAYAAN_3_METRICS">
-                <div className="flex flex-col justify-center h-full">
-                  <div className="text-5xl md:text-7xl font-mono text-white font-bold drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-                    ₹615<span className="text-[#F43325] text-4xl">Cr</span>
-                  </div>
-                  <div className="text-xs font-mono text-[#64748B] mt-3 uppercase tracking-widest flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#F43325] inline-block rounded-sm"></span>
-                    APPROVED BUDGET CAP
-                  </div>
-                </div>
-              </Panel>
-            </div>
-
-            {/* BACK (EASTER EGG SECRETS) */}
-            <div
-              className="absolute inset-0 h-full w-full"
-              style={{ transform: "rotateX(180deg)", backfaceVisibility: "hidden" }}
-            >
-              <Panel title="SYSTEM_SECRETS_OVERRIDE" className="border-[#F43325]/50 bg-[#110505]">
-                <div className="text-xs font-mono text-[#F43325] space-y-2 leading-relaxed">
-                  <div className="flex justify-between border-b border-[#F43325]/30 pb-1"><span>Target: OVERRIDE CODE</span> <span>[ 3468 ]</span></div>
-                  <div className="flex justify-between border-b border-[#F43325]/30 pb-1"><span>Target: ROADMAP</span> <span>[ HYD, LIQ, 01 ]</span></div>
-                  <div className="flex justify-between border-b border-[#F43325]/30 pb-1"><span>Target: PROJECTS</span> <span>[ H2, LIQ, 02 ]</span></div>
-                  <div className="flex justify-between border-b border-[#F43325]/30 pb-1"><span>Target: SKILLS</span> <span>[ SOL, SOL, 03 ]</span></div>
-                  <div className="flex justify-between"><span>Target: CONTACT</span> <span>[ HYD, SOL, 03 ]</span></div>
-                </div>
-              </Panel>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* CONTROLS (Knobs) */}
-        <Panel title="HARDWARE_CALIBRATION" className="col-span-1 xl:col-span-2">
-          <div className="grid grid-cols-3 gap-2 h-full items-center justify-items-center">
-            <AnalogKnob label="FUEL_TYPE" options={["HYD", "H2", "SOL"]} value={fuel} setValue={setFuel} />
-            <AnalogKnob label="ENGINE_TECH" options={["LIQ", "SOL"]} value={tech} setValue={setTech} />
-            <AnalogKnob label="FLOW_PUMP" options={["00", "01", "02", "03"]} value={pump} setValue={setPump} />
-          </div>
-        </Panel>
-
-        {/* OVERRIDE TERMINAL */}
-        <Panel title="SECURITY_OVERRIDE" className="col-span-1 md:col-span-2">
-          <div className="flex flex-col h-full bg-[#0B0E14] p-3 rounded border border-[#2B303B] shadow-inner relative">
-            <div className="text-xs font-mono text-[#F43325] mb-2">{status}</div>
-            <div className="flex gap-3 mt-auto">
-              <input
-                type="text"
-                maxLength={4}
-                value={launcher}
-                onChange={(e) => setLauncher(e.target.value)}
-                placeholder="____"
-                className="flex-1 bg-transparent border-b-2 border-[#334155] focus:border-[#F43325] text-white font-mono text-2xl tracking-[0.5em] text-center outline-none transition-colors"
-              />
-              <button 
-                onClick={validateLaunch} 
-                className="px-4 py-2 bg-[#F43325] text-white font-mono text-xs uppercase tracking-widest rounded hover:bg-[#ff4433] hover:shadow-[0_0_15px_rgba(244,51,37,0.5)] transition-all"
-              >
-                AUTH
-              </button>
-            </div>
-          </div>
-        </Panel>
-
-        {/* TELEMETRY GRAPH */}
-        <Panel title="TELEMETRY_STREAM" className="col-span-1 md:col-span-2">
-           <div className="h-full bg-[#0B0E14] rounded border border-[#2B303B] relative overflow-hidden flex items-center p-2">
-             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#F43325 1px, transparent 1px), linear-gradient(90deg, #F43325 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-             <svg viewBox="0 0 400 100" preserveAspectRatio="none" className="w-full h-16 drop-shadow-[0_0_5px_rgba(244,51,37,0.8)]">
-                <path id="telemetryPath" d="M0,80 Q50,90 100,50 T200,30 T300,70 T400,20" fill="none" stroke="#F43325" strokeWidth="2" strokeDasharray="4,4">
-                  <animate attributeName="stroke-dashoffset" values="40;0" dur="2s" repeatCount="indefinite" />
-                </path>
-                <circle r="3" fill="#FFF" filter="drop-shadow(0 0 4px #F43325)">
-                   <animateMotion dur="4s" repeatCount="indefinite" rotate="auto">
-                      <mpath xlinkHref="#telemetryPath" />
-                   </animateMotion>
-                </circle>
-             </svg>
-           </div>
-        </Panel>
-
-        {/* --- DYNAMIC RENDERED SECTIONS (Unlocked via Secrets) --- */}
-        {roadmapVisible && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="col-span-1 md:col-span-2 xl:col-span-4">
-            <Panel title="DB_FILE // ROADMAP_LOGS">
-              <div className="font-mono text-sm text-[#E2E8F0] space-y-4 max-h-[200px] overflow-y-auto custom-scroll pr-4 bg-[#0B0E14] p-4 rounded border border-[#2B303B]">
-                <div className="border-l-2 border-[#64748B] pl-3 py-1">
-                  <div className="text-[#F43325] font-bold">PHASE_01 [23-24] // FOUNDATION</div>
-                  <div className="text-[#64748B] mt-1">C++, Python, Discrete Math, DSA. Delivered: Study Analyzer, ML Models.</div>
-                </div>
-                <div className="border-l-2 border-[#64748B] pl-3 py-1">
-                  <div className="text-[#F43325] font-bold">PHASE_02 [24-25] // SPECIALIZATION</div>
-                  <div className="text-[#64748B] mt-1">Advanced DSA, Pandas. Delivered: DBSCAN, Face Forgery Detection.</div>
-                </div>
-                <div className="border-l-2 border-[#64748B] pl-3 py-1">
-                  <div className="text-[#F43325] font-bold">PHASE_03 [25-26] // ARCHITECTURE</div>
-                  <div className="text-[#64748B] mt-1">Deep Learning, CV, System Design. Target: Img Processing, CNN Rec Engine.</div>
-                </div>
-              </div>
-            </Panel>
-          </motion.div>
-        )}
-
-        {projectsVisible && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="col-span-1 md:col-span-2 xl:col-span-4">
-            <Panel title="DB_FILE // PROJECTS_ARCHIVE">
-              <div className="font-mono text-sm text-[#E2E8F0] space-y-4 max-h-[200px] overflow-y-auto custom-scroll pr-4 bg-[#0B0E14] p-4 rounded border border-[#2B303B]">
-                <div className="border-l-2 border-[#64748B] pl-3 py-1">
-                  <div className="text-[#F43325] font-bold">PRJ_01 // STUDY_ANALYZER_ML</div>
-                  <div className="text-[#64748B] mt-1">Data-driven performance metric analysis tool utilizing Scikit-Learn pipelines.</div>
-                </div>
-                <div className="border-l-2 border-[#64748B] pl-3 py-1">
-                 <div className="text-[#F43325] font-bold">PRJ_02 // HYPRSPACE_CONTROL</div>
-                  <div className="text-[#64748B] mt-1">Interactive dashboard interface featuring animated React components and secure access codes.</div>
-                </div>
-              </div>
-            </Panel>
-          </motion.div>
-        )}
-
-        {skillsVisible && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="col-span-1 md:col-span-2 xl:col-span-4">
-            <Panel title="DB_FILE // SKILL_MATRIX">
-              <div className="font-mono text-sm text-[#E2E8F0] space-y-2 bg-[#0B0E14] p-4 rounded border border-[#2B303B]">
-                <div className="flex justify-between items-center"><span className="text-[#64748B]">PYTHON</span><span className="text-white">||||||||||--</span></div>
-                <div className="flex justify-between items-center"><span className="text-[#64748B]">C++</span><span className="text-white">|||||||||---</span></div>
-                <div className="flex justify-between items-center"><span className="text-[#64748B]">MACHINE_LEARNING</span><span className="text-white">||||||||----</span></div>
-                <div className="flex justify-between items-center"><span className="text-[#64748B]">REACT/NODEJS</span><span className="text-white">|||||||-----</span></div>
-              </div>
-            </Panel>
-          </motion.div>
-        )}
-
-        {/* CONTACT TERMINAL */}
-        {contactVisible && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="col-span-1 md:col-span-2 xl:col-span-4">
-            <Panel title="SECURE_TRANSMISSION // CONTACT">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#0B0E14] p-4 rounded border border-[#2B303B]">
-                <div className="font-mono text-sm space-y-3">
-                  <div className="text-[#F43325] font-bold">AVAILABLE CHANNELS:</div>
-                  <div className="flex items-center gap-2"><span className="text-[#64748B]">EMAIL:</span> parthibsaha.11sc2020@gmail.com</div>
-                  <div className="flex items-center gap-2"><span className="text-[#64748B]">COMMS_LINK:</span> +91 9330616676</div>
-                  <div className="mt-4 p-3 bg-[#161A22] border border-[#334155] rounded text-xs leading-relaxed text-[#64748B]">
-                    &gt; END-TO-END ENCRYPTION ENABLED.<br/>
-                    &gt; WAITING FOR USER INPUT...
-                  </div>
-                </div>
-
-                <div className="space-y-3 font-mono">
-                  <input
-                    placeholder="ENTER_ID (NAME)"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-[#161A22] border border-[#334155] focus:border-[#F43325] rounded p-2 text-white outline-none placeholder-[#64748B] transition-colors"
-                  />
-                  <input
-                    placeholder="ENTER_RELAY (EMAIL)"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-[#161A22] border border-[#334155] focus:border-[#F43325] rounded p-2 text-white outline-none placeholder-[#64748B] transition-colors"
-                  />
-                  <textarea
-                    placeholder="TRANSMIT_PAYLOAD (MESSAGE)"
-                    rows={3}
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-[#161A22] border border-[#334155] focus:border-[#F43325] rounded p-2 text-white outline-none placeholder-[#64748B] transition-colors resize-none"
-                  />
-                  <div className="flex flex-col gap-3 mt-4">
-                    <button
-                      onClick={handleContactSubmit}
-                      className="w-full px-6 py-2 bg-[#F43325] text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-white hover:text-[#F43325] transition-colors"
-                    >
-                      TRANSMIT DATA
-                    </button>
-                    <a
-                      href="https://wa.me/919330616676?text=Hi%20Parthib%21%20I%20am%20reaching%20out%20from%20your%20portfolio."
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full px-6 py-2 border border-[#25D366] text-[#25D366] text-xs font-bold uppercase tracking-widest rounded hover:bg-[#25D366] hover:text-[#0B0E14] transition-colors text-center"
-                    >
-                      DIRECT WHATSAPP_LINK
-                    </a>
-                    {submitted && (
-                      <div className="text-[#10B981] text-xs font-bold animate-pulse text-center">
-                        TRANSMISSION.SUCCESSFUL
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Panel>
-          </motion.div>
-        )}
-
-      </main>
-    </div>
+      </div>
+      <NavDots sections={SECTION_NAMES} active={activePanel} onDotClick={scrollToPanel} />
+      <ScrollHint />
+    </>
   );
 }
