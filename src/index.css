@@ -220,10 +220,9 @@ body::before {
 /* ─── Responsive fallback: vertical scroll on mobile ── */
 @media (max-width: 768px) {
   .peacock-container {
-    width: 60vw;
-    opacity: 0.08;
-    bottom: 5vh;
-    right: -10vw;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0.03;
   }
   .outer-wrapper {
     overflow-x: hidden;
