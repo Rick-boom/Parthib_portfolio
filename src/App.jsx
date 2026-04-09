@@ -340,7 +340,7 @@ function AboutPanel({ isActive }) {
               I'm Parthib Saha — an AI engineering student who believes that great software is as much an art form as a technical discipline.
             </p>
             <div className="mt-6 flex gap-6 flex-wrap justify-center md:justify-start">
-              {[["CGPA", "8.1"], ["Projects", "4+"], ["Year", "2nd"]].map(([k, v]) => (
+              {[["CGPA", "8.1"], ["Projects", "4+"], ["Year", "3rd"]].map(([k, v]) => (
                 <div key={k} style={{ textAlign: "center" }}>
                   <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2.2rem", fontWeight: 600, color: "var(--saffron)" }}>{v}</div>
                   <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted-text)" }}>{k}</div>
@@ -815,8 +815,8 @@ export default function App() {
       if (window.innerWidth >= 768 && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         // Stop default native down translation
         e.preventDefault();
-        // Lowered aggressive delta map to purely standard 1x native speed 
-        el.scrollBy({ left: e.deltaY, behavior: "auto" });
+        // Lowered aggressive delta map to purely standard 0.5x damped speed 
+        el.scrollBy({ left: e.deltaY * 0.5, behavior: "auto" });
       }
     };
     el.addEventListener("wheel", onWheel, { passive: false });
