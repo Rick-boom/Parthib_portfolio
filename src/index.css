@@ -221,8 +221,8 @@ body::before {
     min-height: 100dvh;
     width: 100vw !important;
     scroll-snap-align: start;
-    padding-top: 80px !important;
-    padding-bottom: 80px !important;
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
   }
   .section-label { display: none; }
 }

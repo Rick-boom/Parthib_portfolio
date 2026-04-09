@@ -96,9 +96,9 @@ function ScrollEntranceLoader({ onComplete }) {
           initial={{ right: "50%" }}
           animate={{ right: "100%" }}
           transition={{ duration: 1.5, delay: 0.6, ease: [0.77, 0, 0.17, 1] }}
-          className="absolute top-0 bottom-0 left-0 bg-[var(--parchment-deep)] border-r-[18px] border-[#9B2335] shadow-[15px_0_50px_rgba(0,0,0,0.8)] z-20"
+          className="absolute top-0 bottom-0 left-0 bg-[var(--parchment-deep)] border-r-[10px] md:border-r-[18px] border-[#9B2335] shadow-[15px_0_50px_rgba(0,0,0,0.8)] z-20"
        >
-         <div className="absolute right-0 top-0 bottom-0 w-16 bg-[url('/madhubani_banner.png')] opacity-30 mix-blend-multiply" />
+         <div className="absolute right-0 top-0 bottom-0 w-10 md:w-16 bg-[url('/madhubani_banner.png')] opacity-30 mix-blend-multiply" />
        </motion.div>
 
        {/* Right Scroll Roll */}
@@ -106,9 +106,9 @@ function ScrollEntranceLoader({ onComplete }) {
           initial={{ left: "50%" }}
           animate={{ left: "100%" }}
           transition={{ duration: 1.5, delay: 0.6, ease: [0.77, 0, 0.17, 1] }}
-          className="absolute top-0 bottom-0 right-0 bg-[var(--parchment-deep)] border-l-[18px] border-[#9B2335] shadow-[-15px_0_50px_rgba(0,0,0,0.8)] z-20"
+          className="absolute top-0 bottom-0 right-0 bg-[var(--parchment-deep)] border-l-[10px] md:border-l-[18px] border-[#9B2335] shadow-[-15px_0_50px_rgba(0,0,0,0.8)] z-20"
        >
-         <div className="absolute left-0 top-0 bottom-0 w-16 bg-[url('/madhubani_banner.png')] opacity-30 mix-blend-multiply" />
+         <div className="absolute left-0 top-0 bottom-0 w-10 md:w-16 bg-[url('/madhubani_banner.png')] opacity-30 mix-blend-multiply" />
        </motion.div>
 
        {/* Center Golden Seal */}
@@ -307,17 +307,17 @@ function AboutPanel({ isActive }) {
 
       <div className="flex flex-col md:grid md:grid-cols-2 gap-10 md:gap-[6vw] items-center h-fit md:h-full">
         <div style={{ display: "flex", justifyContent: "center", position: "relative" }} className="order-2 md:order-1">
-          {/* Freed from PatachitraUnroll clipPath to avoid square shear */}
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 620, height: 620, pointerEvents: "none", zIndex: 0 }}>
+          {/* Responsive sized mandala backing */}
+          <div className="w-[120vw] md:w-[620px] aspect-square" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", pointerEvents: "none", zIndex: 0 }}>
             <img src="/mandala.png" alt="decoration" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "50%", opacity: 0.18, transformOrigin: "50% 50%", animation: "spin-slow 25s linear infinite", mixBlendMode: "multiply" }} />
           </div>
 
           <PatachitraUnroll isActive={isActive}>
-            <div style={{
-              width: 260, height: 260, borderRadius: "50%",
+            <div className="w-[60vw] max-w-[260px] aspect-square" style={{
+              borderRadius: "50%",
               background: "linear-gradient(135deg, var(--saffron) 0%, var(--turmeric) 50%, var(--henna) 100%)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "6rem", color: "var(--parchment)", fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "clamp(3rem, 12vw, 6rem)", color: "var(--parchment)", fontFamily: "'Cormorant Garamond', serif",
               fontWeight: 600, boxShadow: "0 8px 40px rgba(232,101,26,0.3)",
               border: "4px solid var(--parchment)",
               position: "relative", zIndex: 1,
@@ -378,7 +378,7 @@ function JourneyPanel({ isActive }) {
           </div>
         </PatachitraUnroll>
 
-        <div className="flex-1 w-full relative md:pt-8 overflow-y-auto max-h-[60vh] md:max-h-[70vh] custom-scroll">
+        <div className="flex-1 w-full relative md:pt-8 overflow-visible md:overflow-y-auto max-h-none md:max-h-[70vh] custom-scroll">
           <div style={{ position: "absolute", left: 4, top: 0, bottom: 0, width: 1.5, background: "linear-gradient(to bottom, var(--saffron), var(--turmeric), transparent)", opacity: 0.4 }} />
 
           {JOURNEY.map((item, i) => (
@@ -717,7 +717,7 @@ function ColophonPanel({ isActive }) {
       <MadhubaniBottom />
 
       {/* Freed from PatachitraUnroll clipPath to avoid straight horizontal cutoffs */}
-      <div style={{ position: "absolute", top: "45%", left: "50%", transform: "translate(-50%, -50%)", width: 340, height: 340, pointerEvents: "none", zIndex: 0 }}>
+      <div className="w-[90vw] md:w-[340px] aspect-square" style={{ position: "absolute", top: "45%", left: "50%", transform: "translate(-50%, -50%)", pointerEvents: "none", zIndex: 0 }}>
          <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "50%", transformOrigin: "50% 50%", animation: "spin-slow 20s linear infinite", opacity: 0.22, mixBlendMode: "multiply" }} />
       </div>
 
