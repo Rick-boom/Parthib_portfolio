@@ -379,7 +379,7 @@ function JourneyPanel({ isActive }) {
         </PatachitraUnroll>
 
         <div className="flex-1 w-full relative md:pt-8 overflow-visible md:overflow-y-auto max-h-none md:max-h-[70vh] custom-scroll">
-          <div style={{ position: "absolute", left: 4, top: 0, bottom: 0, width: 1.5, background: "linear-gradient(to bottom, var(--saffron), var(--turmeric), transparent)", opacity: 0.4 }} />
+          <div style={{ position: "absolute", left: 14, top: 0, bottom: 0, width: 1.5, background: "linear-gradient(to bottom, var(--saffron), var(--turmeric), transparent)", opacity: 0.4 }} />
 
           {JOURNEY.map((item, i) => (
             <motion.div
@@ -391,9 +391,9 @@ function JourneyPanel({ isActive }) {
                 open: { opacity: 1, x: 0 }
               }}
               transition={{ duration: 0.7, delay: i * 0.15 + 0.2, ease: "easeOut" }}
-              style={{ display: "flex", gap: 20, marginBottom: 36, paddingLeft: 24, position: "relative" }}
+              style={{ display: "flex", gap: 20, marginBottom: 36, paddingLeft: 34, position: "relative" }}
             >
-              <motion.div whileHover={{ scale: 1.5, rotate: 180 }} transition={{ type: "spring", stiffness: 300 }} className="timeline-dot" style={{ position: "absolute", left: -1, top: 2 }} />
+              <motion.div whileHover={{ scale: 1.5, rotate: 180 }} transition={{ type: "spring", stiffness: 300 }} className="timeline-dot" style={{ position: "absolute", left: 9, top: 2 }} />
               <div>
                 <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.72rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 4 }}>
                   {item.year}
@@ -553,7 +553,7 @@ function EducationPanel({ isActive }) {
           <OrnamentLine isActive={isActive} />
 
           <div style={{ marginTop: 20, position: "relative" }}>
-            <div style={{ position: "absolute", left: 5, top: 0, bottom: 0, width: 1.5, background: "linear-gradient(to bottom, var(--saffron), transparent)", opacity: 0.4 }} />
+            <div style={{ position: "absolute", left: 15, top: 0, bottom: 0, width: 1.5, background: "linear-gradient(to bottom, var(--saffron), transparent)", opacity: 0.4 }} />
 
             {EDUCATION.map((edu, i) => (
               <motion.div
@@ -565,9 +565,9 @@ function EducationPanel({ isActive }) {
                     open: { opacity: 1, x: 0 }
                 }}
                 transition={{ duration: 0.7, delay: i * 0.15 + 0.2, ease: "easeOut" }}
-                style={{ display: "flex", gap: 30, marginBottom: 44, paddingLeft: 28, position: "relative" }}
+                style={{ display: "flex", gap: 30, marginBottom: 44, paddingLeft: 38, position: "relative" }}
               >
-                <motion.div whileHover={{ scale: 1.5, rotate: 180 }} transition={{ type: "spring", stiffness: 300 }} className="timeline-dot" style={{ position: "absolute", left: 0, top: 4 }} />
+                <motion.div whileHover={{ scale: 1.5, rotate: 180 }} transition={{ type: "spring", stiffness: 300 }} className="timeline-dot" style={{ position: "absolute", left: 10, top: 4 }} />
                 <div>
                   <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.72rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 6 }}>
                     {edu.year}
@@ -720,7 +720,7 @@ function ContactPanel({ isActive }) {
 
 function ColophonPanel({ isActive }) {
   return (
-    <div className="panel w-full md:w-[50vw] px-6 md:px-[6vw]" style={{ background: "var(--parchment-deep)", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }} id="panel-7">
+    <div className="panel w-full md:w-[100vw] px-6 md:px-[6vw]" style={{ background: "var(--parchment-deep)", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }} id="panel-7">
       <MadhubaniTop />
       <MadhubaniBottom />
 
@@ -804,12 +804,24 @@ export default function App() {
 
     el.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
+
+    // Enable vertical mouse wheel strictly acting as pure horizontal scroll on desktop
+    const onWheel = (e) => {
+      if (window.innerWidth >= 768 && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        // Stop default native down translation
+        e.preventDefault();
+        el.scrollBy({ left: e.deltaY * 2.5, behavior: "auto" });
+      }
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+
     // Also trigger immediately to catch initial positions
     onScroll();
 
     return () => {
       el.removeEventListener("scroll", onScroll);
       window.removeEventListener("scroll", onScroll);
+      el.removeEventListener("wheel", onWheel);
     };
   }, []);
 
