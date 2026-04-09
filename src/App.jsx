@@ -387,13 +387,13 @@ function JourneyPanel({ isActive }) {
               initial="closed"
               animate={isActive ? "open" : "closed"}
               variants={{
-                closed: { clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)", opacity: 0 },
-                open: { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", opacity: 1 }
+                closed: { opacity: 0, x: -30 },
+                open: { opacity: 1, x: 0 }
               }}
-              transition={{ duration: 0.8, delay: i * 0.15 }}
+              transition={{ duration: 0.7, delay: i * 0.15 + 0.2, ease: "easeOut" }}
               style={{ display: "flex", gap: 20, marginBottom: 36, paddingLeft: 24, position: "relative" }}
             >
-              <div className="timeline-dot" style={{ position: "absolute", left: -1 }} />
+              <motion.div whileHover={{ scale: 1.5, rotate: 180 }} transition={{ type: "spring", stiffness: 300 }} className="timeline-dot" style={{ position: "absolute", left: -1, top: 2 }} />
               <div>
                 <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.72rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 4 }}>
                   {item.year}
@@ -434,9 +434,16 @@ function SkillsPanel({ isActive }) {
                 Also Proficient In
               </div>
               {["Competitive Programming (LeetCode)", "Data Preprocessing & Visualisation", "UI/UX Design Principles", "Git & Version Control"].map((item, i) => (
-                <div key={i} style={{ fontFamily: "'EB Garamond', serif", fontSize: "0.95rem", color: "var(--cream-text)", padding: "6px 0", borderBottom: "1px solid var(--parchment-deep)", display: "flex", alignItems: "center", gap: 10 }}>
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+                  transition={{ duration: 0.5, delay: 0.6 + i * 0.1 }}
+                  whileHover={{ x: 4, color: "var(--saffron)" }}
+                  style={{ fontFamily: "'EB Garamond', serif", fontSize: "0.95rem", color: "var(--cream-text)", padding: "6px 0", borderBottom: "1px solid var(--parchment-deep)", display: "flex", alignItems: "center", gap: 10, cursor: "default" }}
+                >
                   <span style={{ color: "var(--saffron)", fontSize: "0.7em" }}>✦</span> {item}
-                </div>
+                </motion.div>
               ))}
             </div>
 
@@ -493,15 +500,16 @@ function ProjectsPanel({ isActive }) {
             initial="closed"
             animate={isActive ? "open" : "closed"}
             variants={{
-                closed: { clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)", opacity: 0 },
-                open: { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", opacity: 1 }
+                closed: { opacity: 0, y: 30 },
+                open: { opacity: 1, y: 0 }
             }}
-            transition={{ duration: 0.8, delay: i * 0.1 }}
+            transition={{ duration: 0.8, delay: i * 0.12, ease: "easeOut" }}
+            whileHover={{ scale: 1.02, y: -4 }}
             style={{
               padding: "20px 24px",
               border: `1px solid ${hovered === i ? "var(--saffron)" : "var(--parchment-deep)"}`,
               background: hovered === i ? "rgba(232,101,26,0.04)" : "var(--parchment-dark)",
-              transition: "all 0.35s ease",
+              transition: "border-color 0.35s ease, background 0.35s ease",
               cursor: "default",
               position: "relative",
             }}
@@ -556,10 +564,10 @@ function EducationPanel({ isActive }) {
                     closed: { opacity: 0, x: -30 },
                     open: { opacity: 1, x: 0 }
                 }}
-                transition={{ duration: 0.7, delay: i * 0.15 }}
+                transition={{ duration: 0.7, delay: i * 0.15 + 0.2, ease: "easeOut" }}
                 style={{ display: "flex", gap: 30, marginBottom: 44, paddingLeft: 28, position: "relative" }}
               >
-                <div className="timeline-dot" style={{ position: "absolute", left: 0, top: 6 }} />
+                <motion.div whileHover={{ scale: 1.5, rotate: 180 }} transition={{ type: "spring", stiffness: 300 }} className="timeline-dot" style={{ position: "absolute", left: 0, top: 4 }} />
                 <div>
                   <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.72rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--saffron)", marginBottom: 6 }}>
                     {edu.year}
