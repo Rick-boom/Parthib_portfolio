@@ -318,7 +318,7 @@ function AboutPanel() {
               interfaces that don't just function, but <em>feel.</em>
             </p>
 
-            <div style={{ marginTop: 24, display: "flex", gap: 24, flexWrap: "wrap", justifyContent: "center", md:justifyContent: "flex-start" }}>
+            <div className="mt-6 flex gap-6 flex-wrap justify-center md:justify-start">
               {[["CGPA", "8.1"], ["Projects", "4+"], ["Year", "2nd"]].map(([k, v]) => (
                 <div key={k} style={{ textAlign: "center" }}>
                   <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2.2rem", fontWeight: 600, color: "var(--saffron)" }}>{v}</div>
