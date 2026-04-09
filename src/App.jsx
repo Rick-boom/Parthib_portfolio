@@ -80,6 +80,50 @@ const JOURNEY = [
 /* ─────────────────────────────────────────────────────────
    ANIMATION & UTILITY COMPONENTS
 ───────────────────────────────────────────────────────── */
+
+// The Scroll unrolling Entrance screen
+function ScrollEntranceLoader({ onComplete }) {
+  return (
+    <motion.div
+       initial={{ opacity: 1 }}
+       animate={{ opacity: 0 }}
+       transition={{ delay: 2.2, duration: 1 }}
+       onAnimationComplete={onComplete}
+       className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none overflow-hidden"
+    >
+       {/* Left Scroll Roll */}
+       <motion.div
+          initial={{ right: "50%" }}
+          animate={{ right: "100%" }}
+          transition={{ duration: 1.5, delay: 0.6, ease: [0.77, 0, 0.17, 1] }}
+          className="absolute top-0 bottom-0 left-0 bg-[var(--parchment-deep)] border-r-[18px] border-[#9B2335] shadow-[15px_0_50px_rgba(0,0,0,0.8)] z-20"
+       >
+         <div className="absolute right-0 top-0 bottom-0 w-16 bg-[url('/madhubani_banner.png')] opacity-30 mix-blend-multiply" />
+       </motion.div>
+
+       {/* Right Scroll Roll */}
+       <motion.div
+          initial={{ left: "50%" }}
+          animate={{ left: "100%" }}
+          transition={{ duration: 1.5, delay: 0.6, ease: [0.77, 0, 0.17, 1] }}
+          className="absolute top-0 bottom-0 right-0 bg-[var(--parchment-deep)] border-l-[18px] border-[#9B2335] shadow-[-15px_0_50px_rgba(0,0,0,0.8)] z-20"
+       >
+         <div className="absolute left-0 top-0 bottom-0 w-16 bg-[url('/madhubani_banner.png')] opacity-30 mix-blend-multiply" />
+       </motion.div>
+
+       {/* Center Golden Seal */}
+       <motion.div
+          initial={{ scale: 1, opacity: 1 }}
+          animate={{ scale: 2, opacity: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="relative z-30 w-28 h-28 rounded-full bg-gradient-to-br from-[var(--saffron)] to-[var(--turmeric)] border-4 border-[var(--parchment)] shadow-2xl flex items-center justify-center text-[var(--parchment)] text-5xl"
+       >
+         ॐ
+       </motion.div>
+    </motion.div>
+  );
+}
+
 function PatachitraUnroll({ children, delay = 0, isActive }) {
   return (
     <motion.div
@@ -217,8 +261,9 @@ function HeroPanel({ isActive }) {
       <MadhubaniBottom />
       <SectionLabel text="Portfolio · Parthib Saha" />
 
-      <div className="hidden md:block" style={{ position: "absolute", right: "5vw", top: "50%", transform: "translateY(-50%)", opacity: 0.12, width: 400, height: 400 }}>
-        <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain", transformOrigin: "50% 50%", animation: "spin-slow 30s linear infinite" }} />
+      {/* Hero Right Mandala (100% circular constrained) */}
+      <div className="hidden md:block" style={{ position: "absolute", right: "5vw", top: "50%", transform: "translateY(-50%)", opacity: 0.12, width: 400, height: 400, borderRadius: "50%", overflow: "hidden" }}>
+        <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", transformOrigin: "50% 50%", animation: "spin-slow 30s linear infinite" }} />
       </div>
 
       <PatachitraUnroll isActive={isActive}>
@@ -264,9 +309,12 @@ function AboutPanel({ isActive }) {
         <div style={{ display: "flex", justifyContent: "center" }} className="order-2 md:order-1">
           <PatachitraUnroll isActive={isActive}>
             <div style={{ position: "relative", width: 260, height: 260 }}>
-              <div style={{ position: "absolute", top: -30, left: -30, right: -30, bottom: -30, pointerEvents: "none" }}>
-                <img src="/mandala.png" alt="decoration" style={{ width: "100%", height: "100%", objectFit: "contain", opacity: 0.18, transformOrigin: "50% 50%", animation: "spin-slow 25s linear infinite" }} />
+              
+              {/* Massive 160% perfectly clamped Mandala */}
+              <div style={{ position: "absolute", top: "-30%", left: "-30%", width: "160%", height: "160%", pointerEvents: "none", borderRadius: "50%", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <img src="/mandala.png" alt="decoration" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.18, transformOrigin: "50% 50%", animation: "spin-slow 25s linear infinite" }} />
               </div>
+
               <div style={{
                 width: 260, height: 260, borderRadius: "50%",
                 background: "linear-gradient(135deg, var(--saffron) 0%, var(--turmeric) 50%, var(--henna) 100%)",
@@ -394,6 +442,17 @@ function SkillsPanel({ isActive }) {
                 </div>
               ))}
             </div>
+
+            {/* DOWNLOAD RESUME PDF BUTTON */}
+            <div className="mt-8 flex justify-center md:justify-start">
+               <a href="/Parthib_Saha_Resume.pdf" download="Parthib_Saha_Resume.pdf" style={{ textDecoration: "none" }}>
+                  <button className="india-btn flex items-center justify-center gap-3 w-full md:w-auto">
+                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                     DOWNLOAD PDF RESUME
+                  </button>
+               </a>
+            </div>
+
           </div>
         </PatachitraUnroll>
 
@@ -664,9 +723,10 @@ function ColophonPanel({ isActive }) {
         <div style={{ textAlign: "center", position: "relative" }}>
           
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+            {/* Clamped Circle Mandala */}
             <div style={{ position: "relative", width: 120, height: 120 }}>
-              <div style={{ position: "absolute", top: -20, left: -20, right: -20, bottom: -20, pointerEvents: "none" }}>
-                <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain", transformOrigin: "50% 50%", animation: "spin-slow 20s linear infinite", opacity: 0.25 }} />
+              <div style={{ position: "absolute", top: -10, left: -10, right: -10, bottom: -10, pointerEvents: "none", borderRadius: "50%", overflow: "hidden" }}>
+                <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", transformOrigin: "50% 50%", animation: "spin-slow 20s linear infinite", opacity: 0.25 }} />
               </div>
             </div>
           </div>
@@ -698,6 +758,7 @@ const SECTION_NAMES = ["Home", "About", "Journey", "Skills", "Projects", "Educat
 export default function App() {
   const wrapperRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
+  const [unrolledScroll, setUnrolledScroll] = useState(false);
 
   const scrollToPanel = (i) => {
     const el = wrapperRef.current;
@@ -765,9 +826,15 @@ export default function App() {
 
   return (
     <>
+      {/* THE INITIAL UNROLLING ENTRANCE LOADER OVERLAY */}
+      {!unrolledScroll && (
+         <ScrollEntranceLoader onComplete={() => setUnrolledScroll(true)} />
+      )}
+
       <div className="outer-wrapper" ref={wrapperRef}>
         <div className="scroll-track">
-          <HeroPanel isActive={activePanel === 0} />
+          {/* Elements stay active if the unroll hasn't finished, giving them time to load their visual assets beneath the loader! */}
+          <HeroPanel isActive={activePanel === 0 || !unrolledScroll} />
           <AboutPanel isActive={activePanel === 1} />
           <JourneyPanel isActive={activePanel === 2} />
           <SkillsPanel isActive={activePanel === 3} />
