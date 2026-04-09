@@ -262,8 +262,8 @@ function HeroPanel({ isActive }) {
       <SectionLabel text="Portfolio · Parthib Saha" />
 
       {/* Hero Right Mandala (100% circular constrained with full visibility) */}
-      <div className="hidden md:block" style={{ position: "absolute", right: "2vw", top: "50%", transform: "translateY(-50%)", opacity: 0.12, width: 500, height: 500, borderRadius: "50%", overflow: "hidden", WebkitMaskImage: "radial-gradient(circle, black 60%, transparent 70%)", maskImage: "radial-gradient(circle, black 60%, transparent 70%)" }}>
-        <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain", transformOrigin: "50% 50%", animation: "spin-slow 30s linear infinite", mixBlendMode: "multiply" }} />
+      <div className="hidden md:block" style={{ position: "absolute", right: "2vw", top: "50%", transform: "translateY(-50%)", opacity: 0.12, width: 500, height: 500 }}>
+        <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "50%", transformOrigin: "50% 50%", animation: "spin-slow 30s linear infinite", mixBlendMode: "multiply" }} />
       </div>
 
       <PatachitraUnroll isActive={isActive}>
@@ -308,8 +308,8 @@ function AboutPanel({ isActive }) {
       <div className="flex flex-col md:grid md:grid-cols-2 gap-10 md:gap-[6vw] items-center h-fit md:h-full">
         <div style={{ display: "flex", justifyContent: "center", position: "relative" }} className="order-2 md:order-1">
           {/* Freed from PatachitraUnroll clipPath to avoid square shear */}
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 620, height: 620, pointerEvents: "none", borderRadius: "50%", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", WebkitMaskImage: "radial-gradient(circle, black 60%, transparent 70%)", maskImage: "radial-gradient(circle, black 60%, transparent 70%)", zIndex: 0 }}>
-            <img src="/mandala.png" alt="decoration" style={{ width: "100%", height: "100%", objectFit: "contain", opacity: 0.18, transformOrigin: "50% 50%", animation: "spin-slow 25s linear infinite", mixBlendMode: "multiply" }} />
+          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 620, height: 620, pointerEvents: "none", zIndex: 0 }}>
+            <img src="/mandala.png" alt="decoration" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "50%", opacity: 0.18, transformOrigin: "50% 50%", animation: "spin-slow 25s linear infinite", mixBlendMode: "multiply" }} />
           </div>
 
           <PatachitraUnroll isActive={isActive}>
@@ -717,8 +717,8 @@ function ColophonPanel({ isActive }) {
       <MadhubaniBottom />
 
       {/* Freed from PatachitraUnroll clipPath to avoid straight horizontal cutoffs */}
-      <div style={{ position: "absolute", top: "45%", left: "50%", transform: "translate(-50%, -50%)", width: 340, height: 340, pointerEvents: "none", borderRadius: "50%", overflow: "hidden", display: "flex", WebkitMaskImage: "radial-gradient(circle, black 60%, transparent 70%)", maskImage: "radial-gradient(circle, black 60%, transparent 70%)", zIndex: 0 }}>
-         <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain", transformOrigin: "50% 50%", animation: "spin-slow 20s linear infinite", opacity: 0.22, mixBlendMode: "multiply" }} />
+      <div style={{ position: "absolute", top: "45%", left: "50%", transform: "translate(-50%, -50%)", width: 340, height: 340, pointerEvents: "none", zIndex: 0 }}>
+         <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "50%", transformOrigin: "50% 50%", animation: "spin-slow 20s linear infinite", opacity: 0.22, mixBlendMode: "multiply" }} />
       </div>
 
       <PatachitraUnroll isActive={isActive}>
