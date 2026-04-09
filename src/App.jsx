@@ -807,10 +807,16 @@ export default function App() {
 
     // Enable vertical mouse wheel strictly acting as pure horizontal scroll on desktop
     const onWheel = (e) => {
+      // If the scroll target is our internal scrolling components (timeline, contact inputs), ignore hijack
+      if (e.target.closest('.custom-scroll') || e.target.tagName === 'TEXTAREA') {
+        return; // Allow native vertical scrolling to persist unharmed
+      }
+
       if (window.innerWidth >= 768 && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         // Stop default native down translation
         e.preventDefault();
-        el.scrollBy({ left: e.deltaY * 2.5, behavior: "auto" });
+        // Lowered aggressive delta map to purely standard 1x native speed 
+        el.scrollBy({ left: e.deltaY, behavior: "auto" });
       }
     };
     el.addEventListener("wheel", onWheel, { passive: false });
