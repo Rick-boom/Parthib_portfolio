@@ -769,44 +769,40 @@ export default function App() {
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
+    
     const onScroll = () => {
-      if (window.innerWidth >= 768) {
-        const scrollX = el.scrollLeft;
-        const totalScrollWidth = el.scrollWidth - el.clientWidth;
-        if (totalScrollWidth <= 0 || scrollX === 0) { setActivePanel(0); return; }
-        
-        let cumulativeWidth = 0;
-        let pIndex = 0;
-        for (let i = 0; i < SECTION_NAMES.length; i++) {
-          const p = el.querySelector(`#panel-${i}`);
-          if (p) {
-            cumulativeWidth += p.clientWidth;
-            if (scrollX + (el.clientWidth / 2) < cumulativeWidth) {
+      let pIndex = -1;
+      for (let i = 0; i < SECTION_NAMES.length; i++) {
+        const p = document.querySelector(`#panel-${i}`);
+        if (p) {
+          const rect = p.getBoundingClientRect();
+          if (window.innerWidth >= 768) {
+            if (rect.left <= window.innerWidth / 2 && rect.right >= window.innerWidth / 2) {
+              pIndex = i;
+              break;
+            }
+          } else {
+            if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
               pIndex = i;
               break;
             }
           }
         }
-        setActivePanel(pIndex);
-      } else {
-        const scrollY = el.scrollTop;
-        let cumulativeHeight = 0;
-        let pIndex = 0;
-        for (let i = 0; i < SECTION_NAMES.length; i++) {
-          const p = el.querySelector(`#panel-${i}`);
-          if (p) {
-            cumulativeHeight += p.clientHeight;
-            if (scrollY + (el.clientHeight / 2) < cumulativeHeight) {
-                pIndex = i;
-                break;
-            }
-          }
-        }
+      }
+      if (pIndex !== -1) {
         setActivePanel(pIndex);
       }
     };
-    el.addEventListener("scroll", onScroll);
-    return () => el.removeEventListener("scroll", onScroll);
+
+    el.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    // Also trigger immediately to catch initial positions
+    onScroll();
+
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   useEffect(() => {
