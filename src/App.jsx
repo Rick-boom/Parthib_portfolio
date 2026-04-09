@@ -157,11 +157,11 @@ function SectionLabel({ text }) {
 
 function BackgroundPeacock() {
   return (
-    <div className="peacock-container peacock-animate">
+    <div className="peacock-container">
       <img 
         src="/peacock.png" 
         alt="Madhubani Peacock" 
-        style={{ width: "100%", height: "100%", objectFit: "contain" }} 
+        style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }} 
       />
     </div>
   );
