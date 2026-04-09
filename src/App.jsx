@@ -261,9 +261,9 @@ function HeroPanel({ isActive }) {
       <MadhubaniBottom />
       <SectionLabel text="Portfolio · Parthib Saha" />
 
-      {/* Hero Right Mandala (100% circular constrained) */}
-      <div className="hidden md:block" style={{ position: "absolute", right: "5vw", top: "50%", transform: "translateY(-50%)", opacity: 0.12, width: 400, height: 400, borderRadius: "50%", overflow: "hidden" }}>
-        <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", transformOrigin: "50% 50%", animation: "spin-slow 30s linear infinite" }} />
+      {/* Hero Right Mandala (100% circular constrained with gradient edge fade) */}
+      <div className="hidden md:block" style={{ position: "absolute", right: "5vw", top: "50%", transform: "translateY(-50%)", opacity: 0.12, width: 400, height: 400, borderRadius: "50%", overflow: "hidden", WebkitMaskImage: "radial-gradient(circle, black 45%, transparent 70%)", maskImage: "radial-gradient(circle, black 45%, transparent 70%)" }}>
+        <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", transformOrigin: "50% 50%", animation: "spin-slow 30s linear infinite", mixBlendMode: "multiply" }} />
       </div>
 
       <PatachitraUnroll isActive={isActive}>
@@ -310,9 +310,9 @@ function AboutPanel({ isActive }) {
           <PatachitraUnroll isActive={isActive}>
             <div style={{ position: "relative", width: 260, height: 260 }}>
               
-              {/* Massive 160% perfectly clamped Mandala */}
-              <div style={{ position: "absolute", top: "-30%", left: "-30%", width: "160%", height: "160%", pointerEvents: "none", borderRadius: "50%", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <img src="/mandala.png" alt="decoration" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.18, transformOrigin: "50% 50%", animation: "spin-slow 25s linear infinite" }} />
+              {/* Massive 160% perfectly clamped Mandala with gradient fade */}
+              <div style={{ position: "absolute", top: "-30%", left: "-30%", width: "160%", height: "160%", pointerEvents: "none", borderRadius: "50%", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", WebkitMaskImage: "radial-gradient(circle, black 50%, transparent 70%)", maskImage: "radial-gradient(circle, black 50%, transparent 70%)" }}>
+                <img src="/mandala.png" alt="decoration" style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.18, transformOrigin: "50% 50%", animation: "spin-slow 25s linear infinite", mixBlendMode: "multiply" }} />
               </div>
 
               <div style={{
@@ -723,10 +723,10 @@ function ColophonPanel({ isActive }) {
         <div style={{ textAlign: "center", position: "relative" }}>
           
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
-            {/* Clamped Circle Mandala */}
+            {/* Clamped Circle Mandala with gradient fade */}
             <div style={{ position: "relative", width: 120, height: 120 }}>
-              <div style={{ position: "absolute", top: -10, left: -10, right: -10, bottom: -10, pointerEvents: "none", borderRadius: "50%", overflow: "hidden" }}>
-                <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", transformOrigin: "50% 50%", animation: "spin-slow 20s linear infinite", opacity: 0.25 }} />
+              <div style={{ position: "absolute", top: -30, left: -30, right: -30, bottom: -30, pointerEvents: "none", borderRadius: "50%", overflow: "hidden", WebkitMaskImage: "radial-gradient(circle, black 40%, transparent 70%)", maskImage: "radial-gradient(circle, black 40%, transparent 70%)" }}>
+                <img src="/mandala.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", transformOrigin: "50% 50%", animation: "spin-slow 20s linear infinite", opacity: 0.25, mixBlendMode: "multiply" }} />
               </div>
             </div>
           </div>
