@@ -155,6 +155,18 @@ function SectionLabel({ text }) {
   return <div className="section-label hidden md:block">{text}</div>;
 }
 
+function BackgroundPeacock() {
+  return (
+    <div className="peacock-container peacock-animate">
+      <img 
+        src="/peacock.png" 
+        alt="Madhubani Peacock" 
+        style={{ width: "100%", height: "100%", objectFit: "contain" }} 
+      />
+    </div>
+  );
+}
+
 function OrnamentLine({ isActive }) {
   return (
     <motion.div 
@@ -256,7 +268,7 @@ function HeroPanel({ isActive }) {
   const typed = phrase.slice(0, charCount);
 
   return (
-    <div className="panel w-full md:w-[100vw] px-6 md:px-[8vw]" style={{ background: "var(--parchment)", position: "relative" }} id="panel-0">
+    <div className="panel w-full md:w-[100vw] px-6 md:px-[8vw]" style={{ background: "rgba(245, 240, 232, 0.7)", position: "relative" }} id="panel-0">
       <MadhubaniTop />
       <MadhubaniBottom />
       <SectionLabel text="Portfolio · Parthib Saha" />
@@ -300,7 +312,7 @@ function HeroPanel({ isActive }) {
 
 function AboutPanel({ isActive }) {
   return (
-    <div className="panel w-full md:w-[80vw] px-6 md:px-[7vw]" style={{ background: "var(--parchment-dark)", position: "relative" }} id="panel-1">
+    <div className="panel w-full md:w-[80vw] px-6 md:px-[7vw]" style={{ background: "rgba(237, 229, 213, 0.7)", position: "relative" }} id="panel-1">
       <MadhubaniTop />
       <MadhubaniBottom />
       <SectionLabel text="About · परिचय" />
@@ -357,7 +369,7 @@ function AboutPanel({ isActive }) {
 
 function JourneyPanel({ isActive }) {
   return (
-    <div className="panel w-full md:w-[90vw] px-6 md:px-[8vw]" style={{ background: "var(--parchment)", position: "relative" }} id="panel-2">
+    <div className="panel w-full md:w-[90vw] px-6 md:px-[8vw]" style={{ background: "rgba(245, 240, 232, 0.7)", position: "relative" }} id="panel-2">
       <MadhubaniTop />
       <MadhubaniBottom />
       <SectionLabel text="Journey · यात्रा" />
@@ -413,7 +425,7 @@ function JourneyPanel({ isActive }) {
 
 function SkillsPanel({ isActive }) {
   return (
-    <div className="panel w-full md:w-[85vw] px-6 md:px-[8vw]" style={{ background: "var(--parchment-dark)", position: "relative" }} id="panel-3">
+    <div className="panel w-full md:w-[85vw] px-6 md:px-[8vw]" style={{ background: "rgba(237, 229, 213, 0.7)", position: "relative" }} id="panel-3">
       <MadhubaniTop />
       <MadhubaniBottom />
       <SectionLabel text="Skills · कौशल" />
@@ -474,7 +486,7 @@ function SkillsPanel({ isActive }) {
 function ProjectsPanel({ isActive }) {
   const [hovered, setHovered] = useState(null);
   return (
-    <div className="panel w-full md:w-[100vw] px-6 md:px-[6vw]" style={{ background: "var(--parchment)", position: "relative" }} id="panel-4">
+    <div className="panel w-full md:w-[100vw] px-6 md:px-[6vw]" style={{ background: "rgba(245, 240, 232, 0.7)", position: "relative" }} id="panel-4">
       <MadhubaniTop />
       <MadhubaniBottom />
       <SectionLabel text="Projects · परियोजनाएँ" />
@@ -537,7 +549,7 @@ function ProjectsPanel({ isActive }) {
 
 function EducationPanel({ isActive }) {
   return (
-    <div className="panel w-full md:w-[75vw] px-6 md:px-[7vw]" style={{ background: "var(--parchment-dark)", position: "relative" }} id="panel-5">
+    <div className="panel w-full md:w-[75vw] px-6 md:px-[7vw]" style={{ background: "rgba(237, 229, 213, 0.7)", position: "relative" }} id="panel-5">
       <MadhubaniTop />
       <MadhubaniBottom />
       <SectionLabel text="Education · शिक्षा" />
@@ -620,7 +632,7 @@ function ContactPanel({ isActive }) {
   };
 
   return (
-    <div className="panel w-full md:w-[90vw] px-6 md:px-[8vw]" style={{ background: "var(--parchment)", position: "relative" }} id="panel-6">
+    <div className="panel w-full md:w-[90vw] px-6 md:px-[8vw]" style={{ background: "rgba(245, 240, 232, 0.7)", position: "relative" }} id="panel-6">
       <MadhubaniTop />
       <MadhubaniBottom />
       <SectionLabel text="Contact · संपर्क" />
@@ -720,7 +732,7 @@ function ContactPanel({ isActive }) {
 
 function ColophonPanel({ isActive }) {
   return (
-    <div className="panel w-full md:w-[100vw] px-6 md:px-[6vw]" style={{ background: "var(--parchment-deep)", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }} id="panel-7">
+    <div className="panel w-full md:w-[100vw] px-6 md:px-[6vw]" style={{ background: "rgba(221, 208, 186, 0.7)", position: "relative", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }} id="panel-7">
       <MadhubaniTop />
       <MadhubaniBottom />
 
@@ -847,12 +859,10 @@ export default function App() {
 
   return (
     <>
-      {/* THE INITIAL UNROLLING ENTRANCE LOADER OVERLAY */}
-      {!unrolledScroll && (
-         <ScrollEntranceLoader onComplete={() => setUnrolledScroll(true)} />
-      )}
-
       <div className="outer-wrapper" ref={wrapperRef}>
+        <BackgroundPeacock />
+        {!unrolledScroll && <ScrollEntranceLoader onComplete={() => setUnrolledScroll(true)} />}
+
         <div className="scroll-track">
           {/* Elements stay active if the unroll hasn't finished, giving them time to load their visual assets beneath the loader! */}
           <HeroPanel isActive={activePanel === 0 || !unrolledScroll} />
