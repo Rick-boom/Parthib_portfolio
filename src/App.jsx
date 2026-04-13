@@ -113,7 +113,7 @@ function BIOS_Boot({ onComplete }) {
     <motion.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[9999] bg-[#050505] text-[#00FF41] p-10 font-mono text-xl overflow-hidden"
+      className="fixed inset-0 z-[9999] bg-[#050505] text-[#FFFFFF] p-10 font-mono text-xl overflow-hidden"
     >
       <div className="mb-8 flex justify-between">
         <div className="text-3xl font-bold">ENERGY STAR <br /> COMPLIANT</div>
@@ -129,7 +129,7 @@ function BIOS_Boot({ onComplete }) {
         <motion.div
           animate={{ opacity: [0, 1] }}
           transition={{ repeat: Infinity, duration: 0.5 }}
-          className="w-3 h-6 bg-[#00FF41]"
+          className="w-3 h-6 bg-[#FFFFFF]"
         />
       </div>
     </motion.div>
@@ -368,7 +368,7 @@ function ProjectsPanel({ isActive }) {
           <motion.div
             key={i}
             whileHover={{ scale: 1.02, x: 5 }}
-            className="group p-6 border border-[#00FF41] border-opacity-20 hover:border-opacity-100 bg-[#0a0a0a] transition-all"
+            className="group p-6 border border-[#FFFFFF] border-opacity-20 hover:border-opacity-100 bg-[#0a0a0a] transition-all"
           >
             <div className="flex justify-between items-start mb-4">
               <span className="text-[#FFB000] text-xs font-mono">{p.year}</span>
@@ -411,14 +411,14 @@ function ContactPanel({ isActive }) {
           </p>
           <div className="space-y-4">
             <div className="text-sm opacity-50">NODE_DATA:</div>
-            <div className="p-4 border border-[#00FF41] border-opacity-30 bg-[#121212]">
+            <div className="p-4 border border-[#FFFFFF] border-opacity-30 bg-[#121212]">
               <div className="flex gap-4 mb-2">
                 <span className="text-[#FFB000]">EMAIL:</span>
                 <span>parthibsaha.11sc2020@gmail.com</span>
               </div>
               <div className="flex gap-4">
-                <span className="text-[#FFB000]">ID:</span>
-                <span>Parthib_Saha_9330616676</span>
+                <span className="text-[#FFB000]">PHONE_NET:</span>
+                <span>+91 9330616676</span>
               </div>
             </div>
           </div>
@@ -477,8 +477,20 @@ export default function App() {
       });
     };
 
+    const onWheel = (e) => {
+      if (window.innerWidth >= 768 && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        if (e.target.closest('.overflow-y-auto')) return;
+        e.preventDefault();
+        el.scrollBy({ left: e.deltaY * 0.8, behavior: "auto" });
+      }
+    };
+
     el.addEventListener("scroll", onScroll);
-    return () => el.removeEventListener("scroll", onScroll);
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      el.removeEventListener("wheel", onWheel);
+    };
   }, [isBooted]);
 
   return (

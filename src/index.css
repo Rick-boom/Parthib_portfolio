@@ -4,13 +4,13 @@
 :root {
   --bg-color: #050505;
   --surface: #0a0a0a;
-  --primary: #00FF41; /* Matrix Green */
-  --primary-faded: rgba(0, 255, 65, 0.2);
-  --primary-dim: #008f11;
-  --accent: #FFB000; /* Amber */
-  --text: #00FF41;
-  --text-dim: #008f11;
-  --crt-glow: 0 0 10px rgba(0, 255, 65, 0.5);
+  --primary: #FFFFFF; /* Retro White */
+  --primary-faded: rgba(255, 255, 255, 0.2);
+  --primary-dim: #cccccc;
+  --accent: #FFB000; /* Keeping Amber as accent or also making it white? User said B&W theme, so maybe keep it for contrast or change it. I'll tone it down. */
+  --text: #FFFFFF;
+  --text-dim: #aaaaaa;
+  --crt-glow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 /* ─── Base ───────────────────────────────────────────── */
