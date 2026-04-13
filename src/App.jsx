@@ -193,7 +193,7 @@ function ASCII_Divider({ isActive }) {
     <motion.div
       initial={{ width: 0 }}
       animate={isActive ? { width: "100%" } : { width: 0 }}
-      className="h-[1px] bg-[#00FF41] opacity-50 my-6"
+      className="h-[1px] bg-[#FFFFFF] opacity-50 my-6"
     />
   );
 }
@@ -219,7 +219,7 @@ function SkillBar({ name, level, isActive, delay }) {
 
 function Tag({ text }) {
   return (
-    <span className="border border-[#00FF41] text-[#00FF41] text-[10px] px-2 py-1 mr-2 mb-2 inline-block opacity-70">
+    <span className="border border-[#FFFFFF] text-[#FFFFFF] text-[10px] px-2 py-1 mr-2 mb-2 inline-block opacity-70">
       {text}
     </span>
   );
@@ -261,7 +261,7 @@ function HeroPanel({ isActive }) {
               and machine learning kernels.
             </p>
           </div>
-          <div className="hidden md:block text-[#00FF41] opacity-30 font-mono text-[10px] whitespace-pre leading-none">
+          <div className="hidden md:block text-[#FFFFFF] opacity-30 font-mono text-[10px] whitespace-pre leading-none">
 {`
           ________________________________________________
          /                                                \\
@@ -299,7 +299,7 @@ function AboutPanel({ isActive }) {
       <TerminalHeader title="USER_INFO.LOG" />
       <div className="terminal-border" />
       <div className="flex flex-col md:grid md:grid-cols-2 gap-10 items-center">
-        <div className="text-6xl md:text-8xl border-4 border-[#00FF41] p-10 font-bold mb-6">
+        <div className="text-6xl md:text-8xl border-4 border-[#FFFFFF] p-10 font-bold mb-6">
           PS_v2
         </div>
         <div>
@@ -346,9 +346,9 @@ function JourneyPanel({ isActive }) {
               initial={{ x: -20, opacity: 0 }}
               animate={isActive ? { x: 0, opacity: 1 } : {}}
               transition={{ delay: i * 0.1 }}
-              className="mb-8 border-l border-[#00FF41] pl-6 relative"
+              className="mb-8 border-l border-[#FFFFFF] pl-6 relative"
             >
-              <div className="absolute left-[-4.5px] top-2 w-2 h-2 bg-[#00FF41]" />
+              <div className="absolute left-[-4.5px] top-2 w-2 h-2 bg-[#FFFFFF]" />
               <div className="text-[#FFB000] text-sm mb-1">STAMP: {entry.year}</div>
               <div className="text-lg">{entry.text}</div>
             </motion.div>
@@ -368,10 +368,10 @@ function SkillsPanel({ isActive }) {
         <div>
           <h2 className="text-4xl font-bold mb-4">CORE_SUBROUTINES</h2>
           <ASCII_Divider isActive={isActive} />
-          <div className="bg-[#121212] p-6 border border-[#00FF41] border-opacity-30">
+          <div className="bg-[#121212] p-6 border border-[#FFFFFF] border-opacity-30">
             <div className="text-xs opacity-40 mb-4">SECONDARY_LIBRARIES:</div>
             {["LeetCode_Optimized", "Pandas_Engine", "UI/UX_Raster", "Git_Control_v3"].map((s, i) => (
-              <div key={i} className="mb-2 text-[#00FF41] text-opacity-80">
+              <div key={i} className="mb-2 text-[#FFFFFF] text-opacity-80">
                 {'>'} {s} [LOADED]
               </div>
             ))}
