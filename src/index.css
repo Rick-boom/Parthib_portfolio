@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
-/* ─── CSS Custom Properties (Retro Terminal) ─────────────────────────── */
+/* ─── CSS Custom Properties (Retro Monochrome Terminal) ──────────────── */
 :root {
   --bg-color: #050505;
   --surface: #0a0a0a;
-  --primary: #FFFFFF; /* Retro White */
-  --primary-faded: rgba(255, 255, 255, 0.2);
-  --primary-dim: #cccccc;
-  --accent: #FFB000; /* Keeping Amber as accent or also making it white? User said B&W theme, so maybe keep it for contrast or change it. I'll tone it down. */
-  --text: #FFFFFF;
-  --text-dim: #aaaaaa;
-  --crt-glow: 0 0 10px rgba(255, 255, 255, 0.3);
+  --primary: #ffffff; 
+  --primary-faded: rgba(255, 255, 255, 0.15);
+  --primary-dim: #999999;
+  --accent: #FFB000; 
+  --text: #ffffff;
+  --text-dim: #999999;
+  --crt-glow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
 
 /* ─── Base ───────────────────────────────────────────── */
@@ -26,6 +26,8 @@ body {
   font-family: 'VT323', 'JetBrains Mono', monospace;
   overflow-x: hidden;
   cursor: crosshair;
+  /* Digital Noise Texture */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
 @media (min-width: 769px) {
@@ -35,54 +37,43 @@ body {
 }
 
 /* ─── CRT Effects Overlay ─────────────────────── */
-body::before {
-  content: " ";
-  display: block;
+.crt-overlay {
   position: fixed;
   top: 0; left: 0; bottom: 0; right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
   z-index: 1000;
-  background-size: 100% 3px, 3px 100%;
   pointer-events: none;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 3px, 3px 100%;
 }
 
-body::after {
-  content: " ";
-  display: block;
+.crt-flicker {
   position: fixed;
-  top: 0; left: 0; bottom: 0; right: 0;
+  inset: 0;
   background: rgba(18, 16, 16, 0.1);
   opacity: 0;
   z-index: 1001;
   pointer-events: none;
-  animation: flicker 0.15s infinite;
+  animation: flicker 0.1s infinite;
 }
 
 @keyframes flicker {
-  0% { opacity: 0.27861; }
-  5% { opacity: 0.34769; }
-  10% { opacity: 0.23604; }
-  15% { opacity: 0.90626; }
-  20% { opacity: 0.18128; }
-  25% { opacity: 0.83891; }
-  30% { opacity: 0.65583; }
-  35% { opacity: 0.57807; }
-  40% { opacity: 0.26559; }
-  45% { opacity: 0.84693; }
-  50% { opacity: 0.96019; }
-  55% { opacity: 0.08594; }
-  60% { opacity: 0.20313; }
-  65% { opacity: 0.71988; }
-  70% { opacity: 0.53455; }
-  75% { opacity: 0.37288; }
-  80% { opacity: 0.71428; }
-  85% { opacity: 0.70419; }
-  90% { opacity: 0.7003; }
-  95% { opacity: 0.36108; }
-  100% { opacity: 0.24387; }
+  0% { opacity: 0.01; }
+  50% { opacity: 0.03; }
+  100% { opacity: 0.01; }
 }
 
-/* ─── Horizontal Scroll Container ────────────────────── */
+/* Screen Warp Effect */
+.screen-warp {
+  animation: warp 10s ease-in-out infinite;
+  perspective: 1000px;
+}
+
+@keyframes warp {
+  0%, 100% { transform: scale(1.02) rotateX(0.5deg); }
+  50% { transform: scale(1.01) rotateX(-0.5deg); }
+}
+
+/* ─── Layout & Containers ────────────────────────────── */
 .scroll-track {
   display: flex;
   flex-direction: row;
@@ -98,14 +89,15 @@ body::after {
   width: 100vw;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  position: relative;
 }
 
 .outer-wrapper::-webkit-scrollbar { display: none; }
 .outer-wrapper { scrollbar-width: none; }
 
-/* ─── Panels ─────────────────────────────────────────── */
 .panel {
   height: 100dvh;
+  width: 100vw;
   flex-shrink: 0;
   scroll-snap-align: start;
   position: relative;
@@ -113,8 +105,8 @@ body::after {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-right: 2px solid var(--primary-faded);
-  background: radial-gradient(circle at center, rgba(0, 255, 65, 0.05) 0%, transparent 70%);
+  border-right: 1px solid var(--primary-faded);
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, transparent 80%);
 }
 
 /* ─── Terminal Elements ─────────────────────────────── */
@@ -131,11 +123,12 @@ body::after {
   align-items: center;
   justify-content: space-between;
   letter-spacing: 2px;
+  box-shadow: 0 0 15px var(--primary-faded);
 }
 
 .terminal-border {
   position: absolute;
-  inset: 10px;
+  inset: 15px;
   border: 1px solid var(--primary-faded);
   pointer-events: none;
 }
@@ -143,100 +136,86 @@ body::after {
 .section-label {
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  font-size: 0.9rem;
-  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--primary);
-  opacity: 0.6;
+  opacity: 0.4;
   position: absolute;
-  left: 20px;
+  left: 25px;
   top: 50%;
   transform: translateY(-50%);
   text-shadow: var(--crt-glow);
 }
 
-/* ─── Skill bars ─────────────────────────────────────── */
+/* ─── Components ─────────────────────────────────────── */
 .skill-bar-track {
-  height: 12px;
+  height: 14px;
   background: #000;
   border: 1px solid var(--primary);
   overflow: hidden;
-  position: relative;
 }
 .skill-bar-fill {
   height: 100%;
   background: var(--primary);
-  box-shadow: 0 0 10px var(--primary);
+  box-shadow: 0 0 12px var(--primary-faded);
 }
 
-/* ─── Timeline dot ───────────────────────────────────── */
-.timeline-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--primary);
-  box-shadow: 0 0 5px var(--primary);
-  flex-shrink: 0;
-}
-
-/* ─── Nav dots ───────────────────────────────────────── */
 .nav-dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border: 1px solid var(--primary);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s;
 }
 .nav-dot.active {
   background: var(--primary);
-  box-shadow: 0 0 10px var(--primary);
+  box-shadow: 0 0 15px var(--primary);
 }
 
-/* ─── Terminal Input ─────────────────────────────────── */
 .terminal-input {
   background: transparent;
   border: 1px solid var(--primary-faded);
   outline: none;
+  padding: 12px;
   font-family: inherit;
-  font-size: 1.1rem;
   color: var(--primary);
-  padding: 8px 12px;
-  width: 100%;
-  transition: border-color 0.3s;
+  transition: all 0.3s;
 }
 .terminal-input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 5px var(--primary-faded);
+  box-shadow: 0 0 10px var(--primary-faded);
 }
 
-/* ─── Buttons ────────────────────────────────────────── */
 .terminal-btn {
-  font-family: inherit;
-  font-size: 1rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--bg-color);
   background: var(--primary);
-  border: 2px solid var(--primary);
-  padding: 8px 20px;
-  cursor: pointer;
+  color: var(--bg-color);
+  padding: 10px 25px;
+  font-weight: bold;
+  letter-spacing: 2px;
   transition: all 0.2s;
-  box-shadow: 0 0 5px var(--primary-faded);
+  border: 1px solid var(--primary);
 }
 .terminal-btn:hover {
   background: transparent;
   color: var(--primary);
-  box-shadow: 0 0 15px var(--primary);
+  box-shadow: 0 0 20px var(--primary);
 }
 
-/* ─── Glitch Text Effect ─────────────────────────────── */
-.glitch {
-  position: relative;
+/* ─── Typewriter Cursor ──────────────────────────────── */
+.cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.2em;
+  background: var(--primary);
+  margin-left: 4px;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
 }
-.glitch::before, .glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+
+@keyframes blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 /* ─── Responsive fallback ── */
@@ -245,6 +224,7 @@ body::after {
     overflow-x: hidden;
     overflow-y: auto;
     height: 100dvh;
+    scroll-snap-type: y mandatory;
   }
   .scroll-track {
     flex-direction: column;
@@ -252,10 +232,16 @@ body::after {
     height: auto;
   }
   .panel {
-    height: auto;
-    min-height: 100dvh;
     width: 100vw !important;
+    min-height: 100dvh;
     padding-top: 60px !important;
-    padding-bottom: 40px !important;
+    padding-bottom: 60px !important;
+    border-right: none;
+    border-bottom: 1px solid var(--primary-faded);
   }
+  .terminal-border { inset: 10px; }
+  .section-label { display: none; }
+  
+  h1 { font-size: 4rem !important; }
+  h2 { font-size: 1.8rem !important; }
 }

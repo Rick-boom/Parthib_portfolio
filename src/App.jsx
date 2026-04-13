@@ -118,8 +118,8 @@ function BIOS_Boot({ onComplete }) {
       <div className="mb-8 flex justify-between">
         <div className="text-3xl font-bold">ENERGY STAR <br /> COMPLIANT</div>
         <div className="text-right">
-          American Megatrends (C) 1985<br />
-          System ID: PARTHIB_CORE_01
+          Indian Megatrends (C) 1985<br />
+          System ID: IND_P_CORE_X1
         </div>
       </div>
       <div className="flex flex-col gap-2">
@@ -146,11 +146,41 @@ function TerminalHeader({ title }) {
   );
 }
 
+function Typewriter({ text, isActive, speed = 50, delay = 0 }) {
+  const [displayedText, setDisplayedText] = useState("");
+  
+  useEffect(() => {
+    if (!isActive) {
+      setDisplayedText("");
+      return;
+    }
+    
+    let i = 0;
+    const timeout = setTimeout(() => {
+      const interval = setInterval(() => {
+        setDisplayedText(text.slice(0, i + 1));
+        i++;
+        if (i >= text.length) clearInterval(interval);
+      }, speed);
+      return () => clearInterval(interval);
+    }, delay);
+    
+    return () => clearTimeout(timeout);
+  }, [isActive, text, speed, delay]);
+
+  return (
+    <span>
+      {displayedText}
+      {isActive && i < text.length && <span className="cursor" />}
+    </span>
+  );
+}
+
 function TypewriterTransition({ children, isActive }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
       transition={{ duration: 0.5 }}
     >
       {children}
@@ -214,9 +244,17 @@ function HeroPanel({ isActive }) {
               <span className="text-[#FFB000]">SAHA</span>
             </h1>
             <ASCII_Divider isActive={isActive} />
-            <div className="text-2xl opacity-80 mb-6">
-              $ whoami --verbose<br />
-              {'>'} Frontend_Architect / AI_Engineer
+            <div className="text-2xl font-mono opacity-90 mb-6 min-h-[3em]">
+              <span className="opacity-50">$ whoami --verbose</span><br />
+              <span className="text-[#FFFFFF]">
+                {'> '}
+                <Typewriter 
+                  text="Frontend_Architect / AI_Engineer" 
+                  isActive={isActive} 
+                  delay={800} 
+                  speed={70} 
+                />
+              </span>
             </div>
             <p className="max-w-xl text-lg opacity-60 leading-relaxed">
               B.Tech Student @ BIT Mesra. Specializing in low-latency UI modules 
@@ -462,10 +500,23 @@ export default function App() {
   const wrapperRef = useRef(null);
   const [activePanel, setActivePanel] = useState(0);
   const [isBooted, setIsBooted] = useState(false);
+  const [isShuttingDown, setIsShuttingDown] = useState(false);
+
+  const resetSystem = () => {
+    setIsShuttingDown(true);
+    setTimeout(() => {
+      setIsBooted(false);
+      setActivePanel(0);
+      setIsShuttingDown(false);
+      if (wrapperRef.current) {
+        wrapperRef.current.scrollLeft = 0;
+      }
+    }, 1500);
+  };
 
   useEffect(() => {
     const el = wrapperRef.current;
-    if (!el) return;
+    if (!el || !isBooted) return;
     
     const onScroll = () => {
       const panels = el.querySelectorAll(".panel");
@@ -479,7 +530,7 @@ export default function App() {
 
     const onWheel = (e) => {
       if (window.innerWidth >= 768 && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        if (e.target.closest('.overflow-y-auto')) return;
+        if (e.target.closest('.custom-scroll')) return;
         e.preventDefault();
         el.scrollBy({ left: e.deltaY * 0.8, behavior: "auto" });
       }
@@ -494,51 +545,81 @@ export default function App() {
   }, [isBooted]);
 
   return (
-    <div className="bg-[#050505] min-h-screen">
-      <AnimatePresence>
-        {!isBooted && <BIOS_Boot onComplete={() => setIsBooted(true)} />}
-      </AnimatePresence>
+    <div className="bg-[#050505] min-h-screen overflow-hidden selection:bg-white selection:text-black">
+      <div className="crt-overlay" />
+      <div className="crt-flicker" />
+      
+      <AnimatePresence mode="wait">
+        {!isBooted && (
+          <BIOS_Boot key="bios" onComplete={() => setIsBooted(true)} />
+        )}
 
-      {isBooted && (
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }}
-          className="outer-wrapper" 
-          ref={wrapperRef}
-        >
-          <div className="scroll-track">
-            <HeroPanel isActive={activePanel === 0} />
-            <AboutPanel isActive={activePanel === 1} />
-            <JourneyPanel isActive={activePanel === 2} />
-            <SkillsPanel isActive={activePanel === 3} />
-            <ProjectsPanel isActive={activePanel === 4} />
-            <ContactPanel isActive={activePanel === 5} />
-            <div className="panel w-[100vw] flex flex-col items-center justify-center" id="panel-6">
-              <TerminalHeader title="SYTEM_SHUTDOWN" />
-              <div className="terminal-border" />
-              <div className="text-center">
-                <h2 className="text-6xl font-bold mb-4">END_OF_LINE</h2>
-                <ASCII_Divider isActive={activePanel === 6} />
-                <p className="opacity-50 text-xl">Thank you for visiting the Mainframe.</p>
-                <div className="mt-10 text-xs opacity-30">© 2024 PARTHIB_CORE // BENGAL_NODE</div>
+        {isBooted && (
+          <motion.div 
+            key="mainframe"
+            initial={{ opacity: 0, filter: "blur(10px)" }} 
+            animate={{ 
+              opacity: isShuttingDown ? 0 : 1, 
+              filter: isShuttingDown ? "blur(20px)" : "blur(0px)",
+              scale: isShuttingDown ? 0.8 : 1
+            }}
+            exit={{ opacity: 0 }}
+            className={`outer-wrapper ${!isShuttingDown ? "screen-warp" : ""}`} 
+            ref={wrapperRef}
+          >
+            <div className="scroll-track">
+              <HeroPanel isActive={activePanel === 0} />
+              <AboutPanel isActive={activePanel === 1} />
+              <JourneyPanel isActive={activePanel === 2} />
+              <SkillsPanel isActive={activePanel === 3} />
+              <ProjectsPanel isActive={activePanel === 4} />
+              <ContactPanel isActive={activePanel === 5} />
+              
+              <div className="panel w-[100vw] flex flex-col items-center justify-center" id="panel-6">
+                <TerminalHeader title="SYTEM_SHUTDOWN" />
+                <div className="terminal-border" />
+                <div className="text-center relative z-10">
+                  <motion.h2 
+                    animate={isActive ? { scale: [1, 1.05, 1] } : {}}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="text-6xl md:text-9xl font-bold mb-4 tracking-tighter"
+                  >
+                    END_OF_LINE
+                  </motion.h2>
+                  <ASCII_Divider isActive={activePanel === 6} />
+                  <p className="opacity-50 text-xl font-mono mb-12">
+                    [ SESSION_EXPIRED // PERSISTENCE_SAVED ]
+                  </p>
+                  
+                  <button 
+                    onClick={resetSystem}
+                    className="terminal-btn text-2xl px-12 py-4"
+                  >
+                    TERMINATE_SESSION
+                  </button>
+                  
+                  <div className="mt-20 text-xs opacity-20 font-mono tracking-widest">
+                    © 2024 PARTHIB_CORE // BENGAL_NODE // SECTOR_7G
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="fixed bottom-10 left-1/2 -translate-x-1/2 flex gap-4 z-[100]">
-            {[0, 1, 2, 3, 4, 5, 6].map(i => (
-              <div
-                key={i}
-                onClick={() => {
-                  const p = document.getElementById(`panel-${i}`);
-                  p?.scrollIntoView({ behavior: "smooth", inline: "start" });
-                }}
-                className={`nav-dot ${activePanel === i ? "active" : ""}`}
-              />
-            ))}
-          </div>
-        </motion.div>
-      )}
+            <div className="fixed bottom-10 left-1/2 -translate-x-1/2 flex gap-4 z-[100]">
+              {[0, 1, 2, 3, 4, 5, 6].map(i => (
+                <div
+                  key={i}
+                  onClick={() => {
+                    const p = document.getElementById(`panel-${i}`);
+                    p?.scrollIntoView({ behavior: "smooth", inline: "start" });
+                  }}
+                  className={`nav-dot ${activePanel === i ? "active" : ""}`}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
