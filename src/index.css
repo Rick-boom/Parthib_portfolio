@@ -1,21 +1,16 @@
 @import "tailwindcss";
 
-/* ─── Google Fonts linked in index.html ─────────────────────────────────── */
-
-/* ─── CSS Custom Properties ─────────────────────────── */
+/* ─── CSS Custom Properties (Retro Terminal) ─────────────────────────── */
 :root {
-  --parchment:    #f5f0e8;
-  --parchment-dark: #ede5d5;
-  --parchment-deep: #ddd0ba;
-  --saffron:      #E8651A;
-  --saffron-light:#f4884a;
-  --henna:        #9B2335;
-  --turmeric:     #C8860A;
-  --indigo-ink:   #1A2744;
-  --forest:       #2D5016;
-  --gold:         #B8860B;
-  --cream-text:   #3D2B1F;
-  --muted-text:   #7A5C40;
+  --bg-color: #050505;
+  --surface: #0a0a0a;
+  --primary: #00FF41; /* Matrix Green */
+  --primary-faded: rgba(0, 255, 65, 0.2);
+  --primary-dim: #008f11;
+  --accent: #FFB000; /* Amber */
+  --text: #00FF41;
+  --text-dim: #008f11;
+  --crt-glow: 0 0 10px rgba(0, 255, 65, 0.5);
 }
 
 /* ─── Base ───────────────────────────────────────────── */
@@ -26,30 +21,65 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   padding: 0;
-  background: var(--parchment);
-  color: var(--cream-text);
-  font-family: 'EB Garamond', 'Noto Serif', Georgia, serif;
+  background: var(--bg-color);
+  color: var(--text);
+  font-family: 'VT323', 'JetBrains Mono', monospace;
   overflow-x: hidden;
-  cursor: default;
+  cursor: crosshair;
 }
 
-/* Fix "Endless Vertical Scroll" on Desktop */
 @media (min-width: 769px) {
   html, body {
-    overflow: hidden; /* Enforce strict no-vertical-scroll lock on horizontal layout */
+    overflow: hidden;
   }
 }
 
-/* ─── Parchment Texture Overlay ─────────────────────── */
+/* ─── CRT Effects Overlay ─────────────────────── */
 body::before {
-  content: '';
+  content: " ";
+  display: block;
   position: fixed;
-  inset: 0;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 1000;
+  background-size: 100% 3px, 3px 100%;
   pointer-events: none;
-  z-index: 999;
-  opacity: 0.5;
+}
+
+body::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: rgba(18, 16, 16, 0.1);
+  opacity: 0;
+  z-index: 1001;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.27861; }
+  5% { opacity: 0.34769; }
+  10% { opacity: 0.23604; }
+  15% { opacity: 0.90626; }
+  20% { opacity: 0.18128; }
+  25% { opacity: 0.83891; }
+  30% { opacity: 0.65583; }
+  35% { opacity: 0.57807; }
+  40% { opacity: 0.26559; }
+  45% { opacity: 0.84693; }
+  50% { opacity: 0.96019; }
+  55% { opacity: 0.08594; }
+  60% { opacity: 0.20313; }
+  65% { opacity: 0.71988; }
+  70% { opacity: 0.53455; }
+  75% { opacity: 0.37288; }
+  80% { opacity: 0.71428; }
+  85% { opacity: 0.70419; }
+  90% { opacity: 0.7003; }
+  95% { opacity: 0.36108; }
+  100% { opacity: 0.24387; }
 }
 
 /* ─── Horizontal Scroll Container ────────────────────── */
@@ -83,147 +113,134 @@ body::before {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-right: 2px solid var(--primary-faded);
+  background: radial-gradient(circle at center, rgba(0, 255, 65, 0.05) 0%, transparent 70%);
 }
 
-/* ─── Divider Lines (like scroll borders) ───────────── */
-.panel-divider {
+/* ─── Terminal Elements ─────────────────────────────── */
+.terminal-header {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 2px;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent 0%, var(--saffron) 20%, var(--turmeric) 50%, var(--saffron) 80%, transparent 100%);
-  opacity: 0.5;
+  top: 0; left: 0; right: 0;
+  height: 30px;
+  background: var(--primary);
+  color: var(--bg-color);
+  font-weight: bold;
+  font-size: 0.8rem;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  letter-spacing: 2px;
 }
 
-/* ─── Madhubani border band ─────────────────────────── */
-.madhubani-band {
+.terminal-border {
   position: absolute;
-  left: 0; right: 0;
-  height: 60px;
-  background-image: url('/madhubani_banner.png');
-  background-size: auto 100%;
-  background-repeat: repeat-x;
-  opacity: 0.25;
+  inset: 10px;
+  border: 1px solid var(--primary-faded);
+  pointer-events: none;
 }
 
-/* ─── Section labels (like Japanese tate-yoko) ──────── */
 .section-label {
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--muted-text);
+  color: var(--primary);
   opacity: 0.6;
   position: absolute;
-  left: 15px;
+  left: 20px;
   top: 50%;
   transform: translateY(-50%);
+  text-shadow: var(--crt-glow);
 }
 
 /* ─── Skill bars ─────────────────────────────────────── */
 .skill-bar-track {
-  height: 4px;
-  background: var(--parchment-deep);
-  border-radius: 2px;
+  height: 12px;
+  background: #000;
+  border: 1px solid var(--primary);
   overflow: hidden;
+  position: relative;
 }
 .skill-bar-fill {
   height: 100%;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--saffron), var(--turmeric));
-  transform-origin: left;
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--primary);
 }
 
 /* ─── Timeline dot ───────────────────────────────────── */
 .timeline-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--saffron);
-  border: 2px solid var(--parchment);
-  box-shadow: 0 0 0 2px var(--saffron);
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  box-shadow: 0 0 5px var(--primary);
   flex-shrink: 0;
 }
 
 /* ─── Nav dots ───────────────────────────────────────── */
 .nav-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--muted-text);
-  opacity: 0.4;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--primary);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 .nav-dot.active {
-  background: var(--saffron);
-  opacity: 1;
-  transform: scale(1.5);
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--primary);
 }
 
-/* ─── Contact input ──────────────────────────────────── */
-.india-input {
+/* ─── Terminal Input ─────────────────────────────────── */
+.terminal-input {
   background: transparent;
-  border: none;
-  border-bottom: 1.5px solid var(--parchment-deep);
+  border: 1px solid var(--primary-faded);
   outline: none;
-  font-family: 'EB Garamond', serif;
-  font-size: 1rem;
-  color: var(--cream-text);
-  padding: 6px 0;
+  font-family: inherit;
+  font-size: 1.1rem;
+  color: var(--primary);
+  padding: 8px 12px;
   width: 100%;
   transition: border-color 0.3s;
 }
-.india-input::placeholder { color: var(--muted-text); opacity: 0.7; }
-.india-input:focus { border-bottom-color: var(--saffron); }
+.terminal-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px var(--primary-faded);
+}
 
-/* ─── Button ─────────────────────────────────────────── */
-.india-btn {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.2em;
+/* ─── Buttons ────────────────────────────────────────── */
+.terminal-btn {
+  font-family: inherit;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--parchment);
-  background: var(--saffron);
-  border: none;
-  padding: 10px 28px;
+  color: var(--bg-color);
+  background: var(--primary);
+  border: 2px solid var(--primary);
+  padding: 8px 20px;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 0 5px var(--primary-faded);
+}
+.terminal-btn:hover {
+  background: transparent;
+  color: var(--primary);
+  box-shadow: 0 0 15px var(--primary);
+}
+
+/* ─── Glitch Text Effect ─────────────────────────────── */
+.glitch {
   position: relative;
-  overflow: hidden;
 }
-.india-btn:hover { background: var(--henna); transform: translateY(-1px); }
-
-/* ─── Animations ─────────────────────────────────────── */
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.spin-slow { animation: spin-slow 20s linear infinite; }
-
-/* ─── Peacock Background ─────────────────────────────── */
-.peacock-container {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 5; 
-  opacity: 0.08;
-  mix-blend-mode: multiply;
-  overflow: hidden;
+.glitch::before, .glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
 }
 
-/* ─── Responsive fallback: vertical scroll on mobile ── */
+/* ─── Responsive fallback ── */
 @media (max-width: 768px) {
-  .peacock-container {
-    width: 100vw;
-    height: 100vh;
-    opacity: 0.06;
-  }
   .outer-wrapper {
     overflow-x: hidden;
     overflow-y: auto;
@@ -238,9 +255,7 @@ body::before {
     height: auto;
     min-height: 100dvh;
     width: 100vw !important;
-    scroll-snap-align: start;
-    padding-top: 40px !important;
+    padding-top: 60px !important;
     padding-bottom: 40px !important;
   }
-  .section-label { display: none; }
 }
