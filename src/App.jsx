@@ -171,7 +171,7 @@ function Typewriter({ text, isActive, speed = 50, delay = 0 }) {
   return (
     <span>
       {displayedText}
-      {isActive && i < text.length && <span className="cursor" />}
+      {isActive && displayedText.length < text.length && <span className="cursor" />}
     </span>
   );
 }
