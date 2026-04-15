@@ -241,7 +241,20 @@ h1, h2, h3, h4, h5 {
 .form-field::placeholder { color: var(--grey-mid); }
 
 /* ── Responsive ─────────────────────────────────────── */
+.show-mobile-only { display: none !important; }
+
 @media (max-width: 768px) {
   .text-hero { font-size: clamp(3rem, 15vw, 5rem); }
   .hide-mobile { display: none !important; }
+  .show-mobile-only { display: flex !important; }
+  
+  .hero-lottie-wrapper {
+    position: relative !important;
+    transform: none !important;
+    right: 0 !important;
+    top: 0 !important;
+    margin: 2rem auto 0 auto;
+    width: 100% !important;
+    max-width: 320px !important;
+  }
 }

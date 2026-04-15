@@ -77,7 +77,7 @@ function LottieCard({ src, style = {}, cardStyle = {} }) {
       <DotLottieReact
         src={src}
         loop
-        speed={20}
+        speed={2.5}
         autoplay={false}
         dotLottieRefCallback={setDotLottie}
         style={{ width: "100%", height: "100%", ...style }}
@@ -175,28 +175,72 @@ function Navbar() {
   }, []);
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      style={{
-        position: "fixed", top: scrolled ? 12 : 20, left: 0, right: 0,
-        zIndex: 1000, display: "flex", justifyContent: "center",
-        padding: "0 20px", pointerEvents: "none",
-        transition: "top 0.3s"
-      }}
-    >
-      <div className="nav-pill" style={{ pointerEvents: "all", maxWidth: 900, width: "100%", justifyContent: "space-between" }}>
-        {/* Logo */}
-        <motion.a href="#home" whileHover={{ scale: 1.05 }} style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.1rem", color: "#fff", textDecoration: "none", letterSpacing: "-0.03em", flexShrink: 0 }}>
-          Parthib<span style={{ color: "var(--orange)" }}>.</span>
-        </motion.a>
+    <>
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          position: "fixed", top: scrolled ? 12 : 20, left: 0, right: 0,
+          zIndex: 1000, display: "flex", justifyContent: "center",
+          padding: "0 20px", pointerEvents: "none",
+          transition: "top 0.3s"
+        }}
+      >
+        <div className="nav-pill" style={{ pointerEvents: "all", maxWidth: 900, width: "100%", justifyContent: "space-between" }}>
+          {/* Logo */}
+          <motion.a href="#home" whileHover={{ scale: 1.05 }} style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.1rem", color: "#fff", textDecoration: "none", letterSpacing: "-0.03em", flexShrink: 0 }}>
+            Parthib<span style={{ color: "var(--orange)" }}>.</span>
+          </motion.a>
 
-        <DropdownNav />
+          {/* Desktop Nav */}
+          <DropdownNav />
 
-        <motion.a href="#contact" className="btn-orange" whileHover={{ scale: 1.05 }} style={{ flexShrink: 0 }}>Say hey</motion.a>
-      </div>
-    </motion.header>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <motion.a href="#contact" className="btn-orange hide-mobile" whileHover={{ scale: 1.05 }} style={{ flexShrink: 0 }}>Say hey</motion.a>
+            {/* Mobile Hamburger Button */}
+            <button 
+              className="show-mobile-only btn-hamburger" 
+              onClick={() => setMenuOpen(!menuOpen)}
+              style={{ background: "transparent", border: "none", color: "var(--white)", cursor: "pointer", display: "none", alignItems: "center", justifyContent: "center", padding: 4 }}
+            >
+              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d={menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </motion.header>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+              background: "var(--black)", zIndex: 999,
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 32,
+              padding: 24
+            }}
+          >
+            {["Work", "Skills", "About", "Contact"].map((link) => (
+              <a 
+                 key={link} 
+                 href={`#${link.toLowerCase()}`} 
+                 onClick={() => setMenuOpen(false)}
+                 style={{ color: "var(--white)", fontSize: "2rem", fontFamily: "var(--font-heading)", textDecoration: "none", fontWeight: 700 }}
+              >
+                {link}
+              </a>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -258,13 +302,13 @@ function Hero() {
         </motion.div>
       </div>
 
-      {/* Floating Lottie world — hover/touch to animate */}
+      {/* Responsive Floating Lottie world */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
         style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%)", width: "clamp(280px, 45vw, 640px)", pointerEvents: "all", zIndex: 0 }}
-        className="hide-mobile"
+        className="hero-lottie-wrapper"
       >
         <LottieCard
           src="/web-dev.c0017e.lottie"
