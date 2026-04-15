@@ -448,7 +448,7 @@ function Contact() {
                 { label: "Email", val: "parthibsaha.11sc2020@gmail.com", href: "mailto:parthibsaha.11sc2020@gmail.com" },
                 { label: "Phone", val: "+91 9330616676", href: "tel:+919330616676" },
                 { label: "GitHub", val: "github.com/Rick-boom", href: "https://github.com/Rick-boom" },
-                { label: "LinkedIn", val: "linkedin.com/in/parthib", href: "#" },
+                { label: "LinkedIn", val: "linkedin.com/in/parthib-saha", href: "https://www.linkedin.com/in/parthib-saha-752a20203/" },
               ].map(({ label, val, href }) => (
                 <div key={label} style={{ display: "flex", gap: 16, alignItems: "center" }}>
                   <span style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.4, width: 60, flexShrink: 0 }}>{label}</span>
