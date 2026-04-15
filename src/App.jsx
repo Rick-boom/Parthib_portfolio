@@ -77,7 +77,7 @@ function LottieCard({ src, style = {}, cardStyle = {} }) {
       <DotLottieReact
         src={src}
         loop
-        speed={50}
+        speed={30}
         autoplay={false}
         dotLottieRefCallback={setDotLottie}
         style={{ width: "100%", height: "100%", ...style }}
@@ -274,14 +274,6 @@ function Hero() {
       </motion.div>
 
       {/* Decorative SVGs */}
-      <motion.img 
-         src="/First-Internet-Icon.svg" 
-         alt="" 
-         aria-hidden="true" 
-         whileHover={{ rotate: 180, scale: 1.2 }}
-         transition={{ duration: 0.5 }}
-         style={{ position: "absolute", top: "10%", right: "2%", width: 60, opacity: 0.8 }} 
-      />
       <motion.img 
          src="/FI-Hover-Graphic.svg" 
          alt="" 
