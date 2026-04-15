@@ -77,7 +77,7 @@ function LottieCard({ src, style = {}, cardStyle = {} }) {
       <DotLottieReact
         src={src}
         loop
-        speed={2.5}
+        speed={20}
         autoplay={false}
         dotLottieRefCallback={setDotLottie}
         style={{ width: "100%", height: "100%", ...style }}
