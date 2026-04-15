@@ -1,645 +1,542 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import "./index.css";
 
-/* ─────────────────────────────────────────────────────────
-   DATA (Retro Tech Themed)
-───────────────────────────────────────────────────────── */
-const SKILLS = [
-  { name: "CORE_LOGIC: HTML / CSS", level: 92 },
-  { name: "SCRIPTING: JavaScript", level: 80 },
-  { name: "FRAMEWORK: React.sys", level: 75 },
-  { name: "BACKEND: Python.py", level: 85 },
-  { name: "LOW_LEVEL: C / C++", level: 78 },
-  { name: "NEURAL_NET: Machine Learning", level: 72 },
-  { name: "QUERY: SQL", level: 70 },
-  { name: "ALGORITHMS: Data Structures", level: 76 },
-];
-
-const EDUCATION = [
-  {
-    year: "2023 - PRESENT",
-    title: "B.Tech: Artificial Intelligence",
-    place: "BIT Mesra (Terminal_Node)",
-    detail: "PROCESSOR_SCORE: 8.1 CGPA",
-  },
-  {
-    year: "2021 - 2022",
-    title: "System_Layer: Class XII",
-    place: "Vivekananda Academy",
-    detail: "OPTIMIZATION: 88.8%",
-  },
-  {
-    year: "2010 - 2020",
-    title: "Base_Layer: Class X",
-    place: "Gospel Home School",
-    detail: "OPTIMIZATION: 89%",
-  },
-];
-
+/* ── Data ──────────────────────────────────────────────────── */
 const PROJECTS = [
   {
-    title: "MISSION_CONTROL_PORTFOLIO",
+    id: 1,
+    title: "Mission Control Portfolio",
+    category: "Web Development",
     year: "2024",
-    tags: ["React", "CSS_V3", "GitHub_Mainframe"],
-    desc: "Designed and deployed a personal portfolio with a terminal aesthetic. Showcases skills, resume, and links.",
-    link: "#",
+    color: "#e8e4ff",
+    tags: ["React", "CSS", "GitHub"],
+    desc: "A full-featured personal portfolio with an immersive aesthetic. Showcases skills, timeline, and projects with smooth animations.",
   },
   {
-    title: "CGPA_PREDICTOR_V1.0",
+    id: 2,
+    title: "CGPA Predictor v1.0",
+    category: "Machine Learning",
     year: "2024",
-    tags: ["Python", "scikit-learn", "ML_Core"],
-    desc: "Built a regression pipeline to predict academic performance. Applied data preprocessing and feature selection.",
-    link: "#",
+    color: "#fff4e8",
+    tags: ["Python", "scikit-learn", "Regression"],
+    desc: "An ML regression pipeline to predict academic performance from study patterns, applying feature selection and data preprocessing.",
   },
   {
-    title: "STUDY_ANALYSER.EXE",
+    id: 3,
+    title: "Face Forgery Detection",
+    category: "Computer Vision",
+    year: "2024",
+    color: "#e8f4ff",
+    tags: ["Deep Learning", "CNN", "Python"],
+    desc: "Computer-vision system to classify real vs. AI-manipulated facial images using advanced CNN architectures.",
+  },
+  {
+    id: 4,
+    title: "Study Analyser",
+    category: "Data Analytics",
     year: "2023",
-    tags: ["Python", "Pandas", "Analytics"],
-    desc: "Processing academic records to generate insights on study patterns and optimization strategies.",
-    link: "#",
-  },
-  {
-    title: "FACE_FORGERY_DETECTION.BIN",
-    year: "2024",
-    tags: ["Deep_Learning", "CV", "Python"],
-    desc: "Computer-vision techniques to classify real vs. manipulated facial images using CNN architectures.",
-    link: "#",
+    color: "#e8ffee",
+    tags: ["Python", "Pandas", "Matplotlib"],
+    desc: "Data pipeline to process academic records and surface insights on study patterns to drive performance optimisation.",
   },
 ];
 
-const LOG_ENTRIES = [
-  { year: "2003", text: "SYSTEM_INIT: Node spawned in West Bengal, India." },
-  { year: "2020", text: "COMPILED: Class X certification achieved (89%)." },
-  { year: "2022", text: "UPGRADED: Class XII optimization completed (88.8%)." },
-  { year: "2023", text: "LINKING: Joined BIT Mesra for AI hardware abstraction." },
-  { year: "2024", text: "PROGRAMMING: Deployed first ML kernels and UI modules." },
-  { year: "PRESENT", text: "RUNNING: Crafting immersive terminal interfaces." },
+const SKILLS = [
+  { num: "01", label: "Frontend Engineering", detail: "React, HTML, CSS, JavaScript — crafting interfaces that feel alive.", lottie: "/web-dev.c0017e.lottie" },
+  { num: "02", label: "Machine Learning", detail: "scikit-learn, TensorFlow, Python — building models that learn and infer.", lottie: "/seo.475764.lottie" },
+  { num: "03", label: "Backend Systems", detail: "Python, C/C++, SQL — designing the logic beneath the surface.", lottie: "/hosting.d6d8cb.lottie" },
+  { num: "04", label: "Data & Analytics", detail: "Pandas, NumPy, Matplotlib — turning raw data into clear decisions.", lottie: "/social.7759fe.lottie" },
 ];
 
-/* ─────────────────────────────────────────────────────────
-   COMPONENTS
-───────────────────────────────────────────────────────── */
+const STATS = [
+  { value: "8.1", label: "CGPA", suffix: "" },
+  { value: "4+", label: "Projects Shipped", suffix: "" },
+  { value: "20", label: "Years on Earth", suffix: "yrs" },
+  { value: "3+", label: "Languages Mastered", suffix: "" },
+];
 
-// BIOS Boot Animation
-function BIOS_Boot({ onComplete }) {
-  const [logs, setLogs] = useState([]);
-  const fullLogs = [
-    "BIOS Version 2.0.4 - Release: 2026",
-    "CPU: AMD Ryzen 7 @ 3.8GHz",
-    "Memory Test: 16384KB OK",
-    "Scanning for HDD... Primary Master: Found",
-    "Loading Kernel... [##########] 100%",
-    "Initializing UI_MODULE.sys...",
-    "Mounting /home/parthib...",
-    "System ready. Welcome, USER.",
-  ];
+/* ── Arrow SVG ─────────────────────────────────────────────── */
+const ArrowIcon = ({ size = 20 }) => (
+  <svg width={size} height={size * 0.87} fill="none" viewBox="0 0 23 20">
+    <path fill="currentColor" stroke="transparent"
+      d="M10.897 0a.979.979 0 1 0 0 1.957h8.787a1 1 0 0 1 1 1v7.787a1 1 0 0 1-1 1H5.817c-.891 0-1.338-1.077-.708-1.707l2.781-2.78a.979.979 0 0 0-1.384-1.385L.293 12.085a1 1 0 0 0 0 1.414l6.213 6.214a.979.979 0 0 0 1.384-1.384l-2.919-2.92c-.63-.63-.183-1.707.708-1.707h15.005c1.08 0 1.957-.877 1.957-1.958V1.957A1.96 1.96 0 0 0 20.684 0z" />
+  </svg>
+);
 
-  const [mem, setMem] = useState(0);
+/* ── Navbar ─────────────────────────────────────────────────── */
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    let currentLine = 0;
-    const interval = setInterval(() => {
-      if (currentLine < fullLogs.length) {
-        setLogs(prev => [...prev, fullLogs[currentLine]]);
-        currentLine++;
-      } else {
-        clearInterval(interval);
-        setTimeout(onComplete, 1200);
-      }
-    }, 250);
-
-    const memInterval = setInterval(() => {
-      setMem(prev => {
-        if (prev >= 16384) {
-          clearInterval(memInterval);
-          return 16384;
-        }
-        return prev + 512;
-      });
-    }, 30);
-
-    return () => {
-      clearInterval(interval);
-      clearInterval(memInterval);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const links = ["Work", "Skills", "About", "Contact"];
+
   return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[9999] bg-[#050505] text-[#FFFFFF] p-10 font-mono text-xl overflow-hidden"
+    <motion.header
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        position: "fixed", top: scrolled ? 12 : 20, left: 0, right: 0,
+        zIndex: 1000, display: "flex", justifyContent: "center",
+        padding: "0 20px", pointerEvents: "none",
+        transition: "top 0.3s"
+      }}
     >
-      <div className="mb-8 flex justify-between">
-        <div className="text-3xl font-bold">ENERGY STAR <br /> COMPLIANT</div>
-        <div className="text-right">
-          Indian Megatrends (C) 1985<br />
-          System ID: IND_P_CORE_X1
+      <div className="nav-pill" style={{ pointerEvents: "all", maxWidth: 900, width: "100%", justifyContent: "space-between" }}>
+        {/* Logo */}
+        <a href="#home" style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.1rem", color: "#fff", textDecoration: "none", letterSpacing: "-0.03em", flexShrink: 0 }}>
+          Parthib<span style={{ color: "var(--orange)" }}>.</span>
+        </a>
+
+        {/* Desktop links */}
+        <nav className="hide-mobile" style={{ display: "flex", gap: 4 }}>
+          {links.map(link => (
+            <a key={link} href={`#${link.toLowerCase()}`} className="nav-link">{link}</a>
+          ))}
+        </nav>
+
+        <a href="#contact" className="btn-orange" style={{ flexShrink: 0 }}>Say hey</a>
+      </div>
+    </motion.header>
+  );
+}
+
+/* ── Hero ────────────────────────────────────────────────────── */
+function Hero() {
+  return (
+    <section id="home" style={{ minHeight: "100dvh", paddingTop: "10rem", paddingBottom: "6rem", background: "var(--white)", position: "relative", overflow: "hidden" }}>
+      <div className="container">
+        {/* Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 40 }}
+        >
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", display: "inline-block", boxShadow: "0 0 0 3px rgba(34,197,94,0.2)" }} />
+          <span style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 500, color: "#666", letterSpacing: "0.02em" }}>
+            B.Tech AI @ BIT Mesra · Open to opportunities
+          </span>
+        </motion.div>
+
+        {/* Big headline */}
+        <div style={{ overflow: "hidden" }}>
+          <motion.h1
+            className="text-hero"
+            initial={{ y: "110%" }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          >
+            Building<br />
+            <span style={{ color: "var(--orange)" }}>digital</span><br />
+            that thinks.
+          </motion.h1>
         </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <div>{'>'} Memory Test: {mem}KB OK</div>
-        {logs.map((log, i) => (
-          <div key={i}>{'>'} {log}</div>
-        ))}
+
+        {/* Sub-row */}
         <motion.div
-          animate={{ opacity: [0, 1] }}
-          transition={{ repeat: Infinity, duration: 0.5 }}
-          className="w-3 h-6 bg-[#FFFFFF]"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+          style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 32, marginTop: 48 }}
+        >
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", lineHeight: 1.65, color: "#555", maxWidth: 360, fontWeight: 400 }}>
+            I'm Parthib Saha — a frontend engineer and AI specialist from West Bengal, India.
+            I craft interfaces that sit at the intersection of aesthetics and intelligence.
+          </p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <a href="#work" className="btn-primary">
+              <span className="btn-label">View my work</span>
+              <span className="btn-arrow"><ArrowIcon /></span>
+            </a>
+            <a href="/Parthib_Saha_Resume.pdf" download className="btn-primary">
+              <span className="btn-label" style={{ background: "transparent", color: "var(--black)" }}>Download CV</span>
+              <span className="btn-arrow"><ArrowIcon /></span>
+            </a>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Floating Lottie world */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%)", width: "clamp(280px, 45vw, 640px)", pointerEvents: "none", zIndex: 0 }}
+        className="hide-mobile"
+      >
+        <dotlottie-player
+          src="/web-dev.c0017e.lottie"
+          autoplay
+          loop
+          style={{ width: "100%", height: "auto" }}
         />
-      </div>
-    </motion.div>
+      </motion.div>
+    </section>
   );
 }
 
-function TerminalHeader({ title }) {
+/* ── Stats Ticker ─────────────────────────────────────────────── */
+function StatsTicker() {
   return (
-    <div className="terminal-header">
-      <span>[Parthib_OS_v2.0]</span>
-      <span>{title}</span>
-      <span>:: _ X </span>
-    </div>
-  );
-}
-
-function Typewriter({ text, isActive, speed = 50, delay = 0 }) {
-  const [displayedText, setDisplayedText] = useState("");
-  
-  useEffect(() => {
-    if (!isActive) {
-      setDisplayedText("");
-      return;
-    }
-    
-    let interval;
-    const timeout = setTimeout(() => {
-      let i = 0;
-      interval = setInterval(() => {
-        setDisplayedText(prev => text.slice(0, prev.length + 1));
-        i++;
-        if (i >= text.length) clearInterval(interval);
-      }, speed);
-    }, delay);
-    
-    return () => {
-      clearTimeout(timeout);
-      if (interval) clearInterval(interval);
-    };
-  }, [isActive, text, speed, delay]);
-
-  return (
-    <span>
-      {displayedText}
-      {isActive && displayedText.length < text.length && <span className="cursor" />}
-    </span>
-  );
-}
-
-function TypewriterTransition({ children, isActive }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-      transition={{ duration: 0.5 }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function ASCII_Divider({ isActive }) {
-  return (
-    <motion.div
-      initial={{ width: 0 }}
-      animate={isActive ? { width: "100%" } : { width: 0 }}
-      className="h-[1px] bg-[#FFFFFF] opacity-50 my-6"
-    />
-  );
-}
-
-function SkillBar({ name, level, isActive, delay }) {
-  return (
-    <div className="mb-6">
-      <div className="flex justify-between mb-2 text-sm opacity-80">
-        <span>{name}</span>
-        <span>{level}%</span>
-      </div>
-      <div className="skill-bar-track">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={isActive ? { width: `${level}%` } : { width: 0 }}
-          transition={{ duration: 1, delay }}
-          className="skill-bar-fill"
-        />
-      </div>
-    </div>
-  );
-}
-
-function Tag({ text }) {
-  return (
-    <span className="border border-[#FFFFFF] text-[#FFFFFF] text-[10px] px-2 py-1 mr-2 mb-2 inline-block opacity-70">
-      {text}
-    </span>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────
-   PANELS
-───────────────────────────────────────────────────────── */
-
-function HeroPanel({ isActive }) {
-  return (
-    <div className="panel w-full md:w-[100vw] px-6 md:px-[10vw]" id="panel-0">
-      <TerminalHeader title="HOME_DIRECT" />
-      <div className="terminal-border" />
-      
-      <TypewriterTransition isActive={isActive}>
-        <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
-          <div className="flex-1">
-            <div className="text-[#FFB000] text-xl mb-4 blink">{'>'} SYSTEM_ONLINE</div>
-            <h1 className="text-6xl md:text-9xl font-bold leading-none mb-6">
-              PARTHIB<br />
-              <span className="text-[#FFB000]">SAHA</span>
-            </h1>
-            <ASCII_Divider isActive={isActive} />
-            <div className="text-2xl font-mono opacity-90 mb-6 min-h-[3em]">
-              <span className="opacity-50">$ whoami --verbose</span><br />
-              <span className="text-[#FFFFFF]">
-                {'> '}
-                <Typewriter 
-                  text="Frontend_Architect / AI_Engineer" 
-                  isActive={isActive} 
-                  delay={800} 
-                  speed={70} 
-                />
+    <section style={{ background: "var(--black)", color: "var(--white)", padding: "32px 0", overflow: "hidden" }}>
+      <div style={{ overflow: "hidden" }}>
+        <div className="marquee-track" style={{ gap: "80px" }}>
+          {[...STATS, ...STATS].map((s, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "baseline", gap: 16, flexShrink: 0 }}>
+              <span className="stat-value" style={{ color: "var(--orange)" }}>{s.value}{s.suffix}</span>
+              <span style={{ fontFamily: "var(--font-body)", fontSize: "1rem", opacity: 0.6, textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
+                {s.label}
               </span>
             </div>
-            <p className="max-w-xl text-lg opacity-60 leading-relaxed">
-              B.Tech Student @ BIT Mesra. Specializing in low-latency UI modules 
-              and machine learning kernels.
-            </p>
-          </div>
-          <div className="hidden md:block text-[#FFFFFF] opacity-30 font-mono text-[10px] whitespace-pre leading-none">
-{`
-          ________________________________________________
-         /                                                \\
-        |    _________________________________________     |
-        |   |                                         |    |
-        |   |  C:\\> PARTHIB_PORTFOLIO.EXE             |    |
-        |   |  INITIALIZING...                        |    |
-        |   |  ....................... [DONE]         |    |
-        |   |                                         |    |
-        |   |  PARTHIB SAHA                           |    |
-        |   |  VERSION 2.0.24-RELEASE                 |    |
-        |   |                                         |    |
-        |   |  LOADING MODULES:                       |    |
-        |   |  - REACT_ENGINE         [OK]            |    |
-        |   |  - AI_NEURAL_KERNELS    [OK]            |    |
-        |   |  - UI_COMPONENTS        [OK]            |    |
-        |   |                                         |    |
-        |   |_________________________________________|    |
-        |                                                  |
-         \\________________________________________________/
-                \\________________________________/
-             ___________________________________________
-            /___________________________________________\\
-`}
-          </div>
-        </div>
-      </TypewriterTransition>
-    </div>
-  );
-}
-
-function AboutPanel({ isActive }) {
-  return (
-    <div className="panel w-full md:w-[80vw] px-6 md:px-[8vw]" id="panel-1">
-      <TerminalHeader title="USER_INFO.LOG" />
-      <div className="terminal-border" />
-      <div className="flex flex-col md:grid md:grid-cols-2 gap-10 items-center">
-        <div className="text-6xl md:text-8xl border-4 border-[#FFFFFF] p-10 font-bold mb-6">
-          PS_v2
-        </div>
-        <div>
-          <TypewriterTransition isActive={isActive}>
-            <h2 className="text-4xl font-bold mb-4">DATA_SPECIFICATION</h2>
-            <ASCII_Divider isActive={isActive} />
-            <p className="text-lg opacity-80 mb-8 leading-relaxed">
-              Rooted in the physical world, dreaming in digital pixels. 
-              I treat code as an art form, optimizing every cycle for 
-              maximum aesthetic efficiency.
-            </p>
-            <div className="grid grid-cols-3 gap-6">
-              {[["CGPA", "8.1"], ["PROJECTS", "4+"], ["Uptime", "20Y"]].map(([k, v]) => (
-                <div key={k}>
-                  <div className="text-3xl font-bold text-[#FFB000]">{v}</div>
-                  <div className="text-xs opacity-50">{k}</div>
-                </div>
-              ))}
-            </div>
-          </TypewriterTransition>
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
-function JourneyPanel({ isActive }) {
+/* ── Work ─────────────────────────────────────────────────────── */
+function Work() {
   return (
-    <div className="panel w-full md:w-[90vw] px-6 md:px-[8vw]" id="panel-2">
-      <TerminalHeader title="CHRONOLOGICAL_BUFFER" />
-      <div className="terminal-border" />
-      <div className="flex flex-col md:flex-row gap-10">
-        <div className="md:w-1/3">
-          <h2 className="text-4xl font-bold mb-4">SYSTEM_HISTORY</h2>
-          <ASCII_Divider isActive={isActive} />
-          <p className="opacity-60 text-lg">
-            A trace of binary milestones across my current operating session.
-          </p>
+    <section id="work" className="section" style={{ background: "var(--grey)" }}>
+      <div className="container">
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 20, marginBottom: 56 }}>
+          <div>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.5, marginBottom: 12 }}>// Selected Projects</p>
+            <h2 className="text-display">Work that<br />speaks for itself.</h2>
+          </div>
+          <a href="#contact" className="btn-primary">
+            <span className="btn-label">Start a project</span>
+            <span className="btn-arrow"><ArrowIcon /></span>
+          </a>
         </div>
-        <div className="flex-1 max-h-[60vh] overflow-y-auto pr-4 custom-scroll">
-          {LOG_ENTRIES.map((entry, i) => (
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 480px), 1fr))", gap: 20 }}>
+          {PROJECTS.map((p, i) => (
             <motion.div
-              key={i}
-              initial={{ x: -20, opacity: 0 }}
-              animate={isActive ? { x: 0, opacity: 1 } : {}}
-              transition={{ delay: i * 0.1 }}
-              className="mb-8 border-l border-[#FFFFFF] pl-6 relative"
+              key={p.id}
+              className="project-card"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="absolute left-[-4.5px] top-2 w-2 h-2 bg-[#FFFFFF]" />
-              <div className="text-[#FFB000] text-sm mb-1">STAMP: {entry.year}</div>
-              <div className="text-lg">{entry.text}</div>
+              {/* Card colour swatch */}
+              <div style={{ height: 200, background: p.color, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
+                <span style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(3rem, 8vw, 5.5rem)", fontWeight: 800, letterSpacing: "-0.05em", opacity: 0.12, lineHeight: 1, textAlign: "center", userSelect: "none" }}>
+                  {p.title.split(" ")[0]}
+                </span>
+                <div style={{ position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.08)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "6px 12px", fontFamily: "var(--font-body)", fontSize: "0.75rem", fontWeight: 600 }}>
+                  {p.year}
+                </div>
+              </div>
+
+              {/* Card body */}
+              <div style={{ padding: "28px 28px 32px" }}>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
+                  {p.tags.map(t => (
+                    <span key={t} style={{ border: "1px solid var(--border)", borderRadius: 6, padding: "4px 10px", fontFamily: "var(--font-body)", fontSize: "0.75rem", fontWeight: 500, color: "#555" }}>{t}</span>
+                  ))}
+                </div>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.45, marginBottom: 8 }}>{p.category}</p>
+                <h3 style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "1.4rem", letterSpacing: "-0.02em", marginBottom: 12 }}>{p.title}</h3>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "#666", lineHeight: 1.65 }}>{p.desc}</p>
+              </div>
             </motion.div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
-function SkillsPanel({ isActive }) {
+/* ── Skills ──────────────────────────────────────────────────── */
+function Skills() {
+  const [activeSkill, setActiveSkill] = useState(0);
+
   return (
-    <div className="panel w-full md:w-[85vw] px-6 md:px-[8vw]" id="panel-3">
-      <TerminalHeader title="MODULE_EFFICIENCY" />
-      <div className="terminal-border" />
-      <div className="grid md:grid-cols-2 gap-10">
-        <div>
-          <h2 className="text-4xl font-bold mb-4">CORE_SUBROUTINES</h2>
-          <ASCII_Divider isActive={isActive} />
-          <div className="bg-[#121212] p-6 border border-[#FFFFFF] border-opacity-30">
-            <div className="text-xs opacity-40 mb-4">SECONDARY_LIBRARIES:</div>
-            {["LeetCode_Optimized", "Pandas_Engine", "UI/UX_Raster", "Git_Control_v3"].map((s, i) => (
-              <div key={i} className="mb-2 text-[#FFFFFF] text-opacity-80">
-                {'>'} {s} [LOADED]
-              </div>
-            ))}
-          </div>
-          <div className="mt-8">
-            <a href="/Parthib_Saha_Resume.pdf" download className="terminal-btn">
-              DOWNLOAD_RESUME.PDF
-            </a>
-          </div>
+    <section id="skills" className="section" style={{ background: "var(--white)" }}>
+      <div className="container">
+        <div style={{ marginBottom: 56 }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.5, marginBottom: 12 }}>// Capabilities</p>
+          <h2 className="text-display">What I do,<br />exceptionally well.</h2>
         </div>
-        <div className="flex flex-col justify-center">
-          {SKILLS.map((s, i) => (
-            <SkillBar key={i} name={s.name} level={s.level} isActive={isActive} delay={i * 0.05} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
-function ProjectsPanel({ isActive }) {
-  return (
-    <div className="panel w-full md:w-[100vw] px-6 md:px-[6vw]" id="panel-4">
-      <TerminalHeader title="WORKSPACE_ARCHIVE" />
-      <div className="terminal-border" />
-      <div className="mb-8">
-        <h2 className="text-4xl font-bold">ACTIVE_KERNELS</h2>
-        <ASCII_Divider isActive={isActive} />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto max-h-[60vh] p-2">
-        {PROJECTS.map((p, i) => (
-          <motion.div
-            key={i}
-            whileHover={{ scale: 1.02, x: 5 }}
-            className="group p-6 border border-[#FFFFFF] border-opacity-20 hover:border-opacity-100 bg-[#0a0a0a] transition-all"
-          >
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-[#FFB000] text-xs font-mono">{p.year}</span>
-              <div className="flex flex-wrap justify-end">
-                {p.tags.map(t => <Tag key={t} text={t} />)}
-              </div>
-            </div>
-            <h3 className="text-2xl font-bold mb-2 group-hover:text-[#FFB000]">{p.title}</h3>
-            <p className="opacity-60 text-sm">{p.desc}</p>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ContactPanel({ isActive }) {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState("READY");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setStatus("TRANSMITTING...");
-    setTimeout(() => {
-      setStatus("DATA_SENT_SUCCESS");
-      setForm({ name: "", email: "", message: "" });
-    }, 1500);
-  };
-
-  return (
-    <div className="panel w-full md:w-[90vw] px-6 md:px-[8vw]" id="panel-5">
-      <TerminalHeader title="UPLINK_STATION" />
-      <div className="terminal-border" />
-      <div className="flex flex-col md:grid md:grid-cols-2 gap-10">
-        <div>
-          <h2 className="text-4xl font-bold mb-4">ESTABLISH_CONNECTION</h2>
-          <ASCII_Divider isActive={isActive} />
-          <p className="opacity-60 mb-8">
-            Transmit your coordinates. Open frequency for collaboration and inquiries.
-          </p>
-          <div className="space-y-4">
-            <div className="text-sm opacity-50">NODE_DATA:</div>
-            <div className="p-4 border border-[#FFFFFF] border-opacity-30 bg-[#121212]">
-              <div className="flex gap-4 mb-2">
-                <span className="text-[#FFB000]">EMAIL:</span>
-                <span>parthibsaha.11sc2020@gmail.com</span>
-              </div>
-              <div className="flex gap-4">
-                <span className="text-[#FFB000]">PHONE_NET:</span>
-                <span>+91 9330616676</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          <input 
-            type="text" 
-            placeholder="[USER_NAME]" 
-            className="terminal-input"
-            value={form.name}
-            onChange={e => setForm({...form, name: e.target.value})}
-          />
-          <input 
-            type="email" 
-            placeholder="[USER_EMAIL]" 
-            className="terminal-input"
-            value={form.email}
-            onChange={e => setForm({...form, email: e.target.value})}
-          />
-          <textarea 
-            placeholder="[INPUT_MESSAGE]" 
-            className="terminal-input h-32 resize-none"
-            value={form.message}
-            onChange={e => setForm({...form, message: e.target.value})}
-          />
-          <div className="flex items-center gap-6">
-            <button className="terminal-btn">EXECUTE_SEND</button>
-            <span className="text-xs text-[#FFB000] tracking-widest">{status}</span>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────
-   MAIN APP
-───────────────────────────────────────────────────────── */
-
-export default function App() {
-  const wrapperRef = useRef(null);
-  const [activePanel, setActivePanel] = useState(0);
-  const [isBooted, setIsBooted] = useState(false);
-  const [isShuttingDown, setIsShuttingDown] = useState(false);
-
-  const resetSystem = () => {
-    setIsShuttingDown(true);
-    setTimeout(() => {
-      setIsBooted(false);
-      setActivePanel(0);
-      setIsShuttingDown(false);
-      if (wrapperRef.current) {
-        wrapperRef.current.scrollLeft = 0;
-      }
-    }, 1500);
-  };
-
-  useEffect(() => {
-    const el = wrapperRef.current;
-    if (!el || !isBooted) return;
-    
-    const onScroll = () => {
-      const panels = el.querySelectorAll(".panel");
-      panels.forEach((p, i) => {
-        const rect = p.getBoundingClientRect();
-        if (rect.left >= -100 && rect.left <= window.innerWidth / 2) {
-          setActivePanel(i);
-        }
-      });
-    };
-
-    const onWheel = (e) => {
-      if (window.innerWidth >= 768 && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        if (e.target.closest('.custom-scroll')) return;
-        e.preventDefault();
-        el.scrollBy({ left: e.deltaY * 0.8, behavior: "auto" });
-      }
-    };
-
-    el.addEventListener("scroll", onScroll);
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => {
-      el.removeEventListener("scroll", onScroll);
-      el.removeEventListener("wheel", onWheel);
-    };
-  }, [isBooted]);
-
-  return (
-    <div className="bg-[#050505] min-h-screen overflow-hidden selection:bg-white selection:text-black">
-      <div className="crt-overlay" />
-      <div className="crt-flicker" />
-      
-      <AnimatePresence mode="wait">
-        {!isBooted && (
-          <BIOS_Boot key="bios" onComplete={() => setIsBooted(true)} />
-        )}
-
-        {isBooted && (
-          <motion.div 
-            key="mainframe"
-            initial={{ opacity: 0, filter: "blur(10px)" }} 
-            animate={{ 
-              opacity: isShuttingDown ? 0 : 1, 
-              filter: isShuttingDown ? "blur(20px)" : "blur(0px)",
-              scale: isShuttingDown ? 0.8 : 1
-            }}
-            exit={{ opacity: 0 }}
-            className={`outer-wrapper ${!isShuttingDown ? "screen-warp" : ""}`} 
-            ref={wrapperRef}
-          >
-            <div className="scroll-track">
-              <HeroPanel isActive={activePanel === 0} />
-              <AboutPanel isActive={activePanel === 1} />
-              <JourneyPanel isActive={activePanel === 2} />
-              <SkillsPanel isActive={activePanel === 3} />
-              <ProjectsPanel isActive={activePanel === 4} />
-              <ContactPanel isActive={activePanel === 5} />
-              
-              <div className="panel w-[100vw] flex flex-col items-center justify-center" id="panel-6">
-                <TerminalHeader title="SYTEM_SHUTDOWN" />
-                <div className="terminal-border" />
-                <div className="text-center relative z-10">
-                  <motion.h2 
-                    animate={activePanel === 6 ? { scale: [1, 1.05, 1] } : {}}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    className="text-6xl md:text-9xl font-bold mb-4 tracking-tighter"
-                  >
-                    END_OF_LINE
-                  </motion.h2>
-                  <ASCII_Divider isActive={activePanel === 6} />
-                  <p className="opacity-50 text-xl font-mono mb-12">
-                    [ SESSION_EXPIRED // PERSISTENCE_SAVED ]
-                  </p>
-                  
-                  <button 
-                    onClick={resetSystem}
-                    className="terminal-btn text-2xl px-12 py-4"
-                  >
-                    TERMINATE_SESSION
-                  </button>
-                  
-                  <div className="mt-20 text-xs opacity-20 font-mono tracking-widest">
-                    © 2024 PARTHIB_CORE // BENGAL_NODE // SECTOR_7G
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }} className="skills-grid">
+          {/* Skill List */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {SKILLS.map((s, i) => (
+              <motion.div
+                key={i}
+                className="skill-card"
+                onClick={() => setActiveSkill(i)}
+                style={{ cursor: "pointer", borderColor: activeSkill === i ? "var(--black)" : "var(--border)", background: activeSkill === i ? "var(--black)" : "var(--white)", color: activeSkill === i ? "var(--white)" : "var(--black)", transition: "all 0.25s" }}
+                whileHover={{ scale: 1.01 }}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+              >
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 20 }}>
+                  <span style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1rem", opacity: 0.4, letterSpacing: "-0.02em", flexShrink: 0, marginTop: 2 }}>({s.num})</span>
+                  <div>
+                    <h3 style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "1.2rem", letterSpacing: "-0.02em", marginBottom: 6 }}>{s.label}</h3>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", opacity: 0.7, lineHeight: 1.55 }}>{s.detail}</p>
                   </div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            ))}
+          </div>
 
-            <div className="fixed bottom-10 left-1/2 -translate-x-1/2 flex gap-4 z-[100]">
-              {[0, 1, 2, 3, 4, 5, 6].map(i => (
-                <div
-                  key={i}
-                  onClick={() => {
-                    const p = document.getElementById(`panel-${i}`);
-                    p?.scrollIntoView({ behavior: "smooth", inline: "start" });
-                  }}
-                  className={`nav-dot ${activePanel === i ? "active" : ""}`}
+          {/* Lottie Preview */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSkill}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.45 }}
+                style={{ width: "min(100%, 380px)" }}
+              >
+                <dotlottie-player
+                  src={SKILLS[activeSkill].lottie}
+                  autoplay
+                  loop
+                  style={{ width: "100%", height: "auto" }}
                 />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .skills-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+/* ── About ───────────────────────────────────────────────────── */
+function About() {
+  return (
+    <section id="about" className="section" style={{ background: "var(--black)", color: "var(--white)" }}>
+      <div className="container">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(40px, 6vw, 100px)", alignItems: "center" }} className="about-grid">
+          {/* Left: big text */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4, marginBottom: 20 }}>// About Me</p>
+            <h2 className="text-display" style={{ marginBottom: 32 }}>
+              Rooted in<br />
+              <span style={{ color: "var(--orange)" }}>West Bengal,</span><br />
+              dreaming in code.
+            </h2>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginTop: 40, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+              {STATS.map((s, i) => (
+                <div key={i}>
+                  <div className="stat-value" style={{ color: "var(--orange)" }}>{s.value}{s.suffix}</div>
+                  <div style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", opacity: 0.5, marginTop: 4 }}>{s.label}</div>
+                </div>
               ))}
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+
+          {/* Right: bio */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: 24, fontFamily: "var(--font-body)", fontSize: "1rem", lineHeight: 1.75, color: "rgba(255,255,255,0.7)" }}>
+              <p>
+                I'm a second-year B.Tech student in Artificial Intelligence at BIT Mesra — but I've been building things on the web long before that. I treat code as a craft, not just a tool.
+              </p>
+              <p>
+                My focus lies at the intersection of <strong style={{ color: "var(--white)", fontWeight: 600 }}>beautiful interfaces</strong> and <strong style={{ color: "var(--white)", fontWeight: 600 }}>intelligent systems</strong>. Whether it's a React UI or a machine learning pipeline, I obsess over the details.
+              </p>
+              <p>
+                Outside the terminal: cricket, philosophy, and convincing people that design is just applied empathy.
+              </p>
+            </div>
+
+            <div style={{ marginTop: 40, display: "flex", gap: 16, flexWrap: "wrap" }}>
+              <a href="/Parthib_Saha_Resume.pdf" download className="btn-primary">
+                <span className="btn-label" style={{ background: "var(--orange)", borderColor: "var(--orange)", color: "var(--black)" }}>Download CV</span>
+                <span className="btn-arrow" style={{ borderColor: "rgba(255,255,255,0.2)", background: "transparent" }}><ArrowIcon /></span>
+              </a>
+              <a href="mailto:parthibsaha.11sc2020@gmail.com" className="btn-primary">
+                <span className="btn-label" style={{ background: "transparent", color: "var(--white)" }}>Email me</span>
+                <span className="btn-arrow" style={{ borderColor: "rgba(255,255,255,0.2)", background: "transparent" }}><ArrowIcon /></span>
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .about-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+/* ── Contact ─────────────────────────────────────────────────── */
+function Contact() {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState("idle");
+
+  const submit = (e) => {
+    e.preventDefault();
+    setStatus("sending");
+    setTimeout(() => { setStatus("sent"); setForm({ name: "", email: "", message: "" }); }, 1400);
+  };
+
+  return (
+    <section id="contact" className="section" style={{ background: "var(--white)", borderTop: "1px solid var(--border)" }}>
+      <div className="container">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(40px, 6vw, 100px)" }} className="contact-grid">
+          {/* Left */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.5, marginBottom: 20 }}>// Get in Touch</p>
+            <h2 className="text-display" style={{ marginBottom: 32 }}>
+              Let's build<br />something<br /><span style={{ color: "var(--orange)" }}>brilliant.</span>
+            </h2>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "#666", lineHeight: 1.7, maxWidth: 360 }}>
+              Open to internships, freelance work, and long-term collaborations. If you have an idea that deserves a great execution — get in touch.
+            </p>
+
+            <div style={{ marginTop: 40, display: "flex", flexDirection: "column", gap: 16 }}>
+              {[
+                { label: "Email", val: "parthibsaha.11sc2020@gmail.com", href: "mailto:parthibsaha.11sc2020@gmail.com" },
+                { label: "Phone", val: "+91 9330616676", href: "tel:+919330616676" },
+                { label: "GitHub", val: "github.com/Rick-boom", href: "https://github.com/Rick-boom" },
+                { label: "LinkedIn", val: "linkedin.com/in/parthib", href: "#" },
+              ].map(({ label, val, href }) => (
+                <div key={label} style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.4, width: 60, flexShrink: 0 }}>{label}</span>
+                  <a href={href} style={{ fontFamily: "var(--font-body)", fontSize: "0.9rem", color: "var(--black)", textDecoration: "none", borderBottom: "1px solid var(--border)", paddingBottom: 2, transition: "border-color 0.2s" }}
+                    onMouseEnter={e => e.target.style.borderColor = "var(--black)"}
+                    onMouseLeave={e => e.target.style.borderColor = "var(--border)"}
+                  >{val}</a>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right: form */}
+          <motion.form
+            onSubmit={submit}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+            style={{ display: "flex", flexDirection: "column", gap: 0 }}
+          >
+            <div style={{ marginBottom: 32 }}>
+              <label style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.5, display: "block", marginBottom: 8 }}>Your Name</label>
+              <input className="form-field" type="text" placeholder="Firstname Lastname" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
+            </div>
+            <div style={{ marginBottom: 32 }}>
+              <label style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.5, display: "block", marginBottom: 8 }}>Email Address</label>
+              <input className="form-field" type="email" placeholder="you@domain.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required />
+            </div>
+            <div style={{ marginBottom: 40 }}>
+              <label style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.5, display: "block", marginBottom: 8 }}>Message</label>
+              <textarea className="form-field" placeholder="Tell me about your project..." value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} style={{ height: 140, resize: "none", display: "block" }} required />
+            </div>
+
+            <button type="submit" className="btn-primary" style={{ alignSelf: "flex-start", cursor: "pointer" }} disabled={status === "sending" || status === "sent"}>
+              <span className="btn-label" style={{ background: status === "sent" ? "#22c55e" : "var(--black)", borderColor: status === "sent" ? "#22c55e" : "var(--black)" }}>
+                {status === "idle" ? "Send message" : status === "sending" ? "Sending…" : "Sent ✓"}
+              </span>
+              <span className="btn-arrow"><ArrowIcon /></span>
+            </button>
+          </motion.form>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .contact-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+function Footer() {
+  return (
+    <footer style={{ background: "var(--black)", color: "var(--white)", padding: "32px 0" }}>
+      <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+        <span style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.1rem", letterSpacing: "-0.03em" }}>
+          Parthib<span style={{ color: "var(--orange)" }}>.</span>
+        </span>
+        <span style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", opacity: 0.45 }}>
+          © {new Date().getFullYear()} Parthib Saha · Built with React & obsession.
+        </span>
+        <div style={{ display: "flex", gap: 20 }}>
+          {["GitHub", "LinkedIn", "Email"].map(s => (
+            <a key={s} href="#" style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "rgba(255,255,255,0.5)", textDecoration: "none", transition: "color 0.2s" }}
+              onMouseEnter={e => e.target.style.color = "var(--white)"}
+              onMouseLeave={e => e.target.style.color = "rgba(255,255,255,0.5)"}
+            >{s}</a>
+          ))}
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ── App ─────────────────────────────────────────────────────── */
+export default function App() {
+  // Register DotLottie web component
+  useEffect(() => {
+    import("@dotlottie/player-component").then(({ DotLottiePlayer }) => {
+      if (!customElements.get("dotlottie-player")) {
+        customElements.define("dotlottie-player", DotLottiePlayer);
+      }
+    }).catch(() => {});
+  }, []);
+
+  return (
+    <>
+      <Navbar />
+      <main>
+        <Hero />
+        <StatsTicker />
+        <Work />
+        <Skills />
+        <About />
+        <Contact />
+      </main>
+      <Footer />
+    </>
   );
 }
