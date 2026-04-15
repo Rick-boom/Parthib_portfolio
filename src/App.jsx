@@ -92,6 +92,75 @@ const ArrowIcon = ({ size = 20 }) => (
 );
 
 /* ── Navbar ─────────────────────────────────────────────────── */
+function DropdownNav() {
+  const [activeMenu, setActiveMenu] = useState(null);
+
+  const menus = [
+    { label: "Work", href: "#work", subLinks: null },
+    { label: "Services", href: "#skills", subLinks: [
+      { label: "(01) Web Development", href: "#skills" },
+      { label: "(02) SEO", href: "#skills" },
+      { label: "(03) Social", href: "#skills" },
+      { label: "(04) Hosting / Maintenance", href: "#skills" }
+    ]},
+    { label: "About", href: "#about", subLinks: null },
+    { label: "Insights", href: "#", subLinks: null }
+  ];
+
+  return (
+    <nav className="hide-mobile" style={{ display: "flex", gap: 4 }}>
+      {menus.map((menu) => (
+        <div key={menu.label} 
+             onMouseEnter={() => setActiveMenu(menu.label)}
+             onMouseLeave={() => setActiveMenu(null)}
+             style={{ position: "relative" }}>
+          <motion.a 
+            href={menu.href} 
+            className="nav-link"
+            whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.15)" }}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            {menu.label}
+          </motion.a>
+
+          {menu.subLinks && (
+            <AnimatePresence>
+              {activeMenu === menu.label && (
+                <motion.div
+                  initial={{ opacity: 0, y: 15, scaleY: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scaleY: 1 }}
+                  exit={{ opacity: 0, y: 15, scaleY: 0.8 }}
+                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                  style={{
+                    position: "absolute", top: "100%", left: -20, minWidth: "260px",
+                    background: "var(--black)", padding: "16px", borderRadius: 12,
+                    marginTop: 8, boxShadow: "0 20px 40px rgba(0,0,0,0.4)", transformOrigin: "top",
+                    display: "flex", flexDirection: "column", gap: 8, zIndex: 2000
+                  }}
+                >
+                  {menu.subLinks.map((sub, i) => (
+                    <motion.a
+                      key={sub.label}
+                      href={sub.href}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      whileHover={{ x: 5, color: "var(--orange)" }}
+                      style={{ color: "var(--white)", textDecoration: "none", fontSize: "0.9rem", fontWeight: 600, padding: "8px 0", borderBottom: i < menu.subLinks.length - 1 ? "1px solid rgba(255,255,255,0.1)" : "none" }}
+                    >
+                      {sub.label}
+                    </motion.a>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          )}
+        </div>
+      ))}
+    </nav>
+  );
+}
+
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -101,8 +170,6 @@ function Navbar() {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const links = ["Work", "Skills", "About", "Contact"];
 
   return (
     <motion.header
@@ -118,18 +185,13 @@ function Navbar() {
     >
       <div className="nav-pill" style={{ pointerEvents: "all", maxWidth: 900, width: "100%", justifyContent: "space-between" }}>
         {/* Logo */}
-        <a href="#home" style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.1rem", color: "#fff", textDecoration: "none", letterSpacing: "-0.03em", flexShrink: 0 }}>
+        <motion.a href="#home" whileHover={{ scale: 1.05 }} style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1.1rem", color: "#fff", textDecoration: "none", letterSpacing: "-0.03em", flexShrink: 0 }}>
           Parthib<span style={{ color: "var(--orange)" }}>.</span>
-        </a>
+        </motion.a>
 
-        {/* Desktop links */}
-        <nav className="hide-mobile" style={{ display: "flex", gap: 4 }}>
-          {links.map(link => (
-            <a key={link} href={`#${link.toLowerCase()}`} className="nav-link">{link}</a>
-          ))}
-        </nav>
+        <DropdownNav />
 
-        <a href="#contact" className="btn-orange" style={{ flexShrink: 0 }}>Say hey</a>
+        <motion.a href="#contact" className="btn-orange" whileHover={{ scale: 1.05 }} style={{ flexShrink: 0 }}>Say hey</motion.a>
       </div>
     </motion.header>
   );
@@ -138,12 +200,13 @@ function Navbar() {
 /* ── Hero ────────────────────────────────────────────────────── */
 function Hero() {
   return (
-    <section id="home" style={{ minHeight: "100dvh", paddingTop: "10rem", paddingBottom: "6rem", background: "var(--white)", position: "relative", overflow: "hidden" }}>
+    <section id="home" style={{ minHeight: "100dvh", paddingTop: "10rem", paddingBottom: "3rem", background: "var(--white)", position: "relative", overflow: "hidden" }}>
       <div className="container">
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 40 }}
         >
@@ -172,12 +235,12 @@ function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.5 }}
-          style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 32, marginTop: 48 }}
+          style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 32, marginTop: 48, position: "relative", zIndex: 10 }}
         >
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", lineHeight: 1.65, color: "#555", maxWidth: 360, fontWeight: 400 }}>
+          <motion.p whileHover={{ scale: 1.02, color: "var(--black)" }} style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", lineHeight: 1.65, color: "#555", maxWidth: 360, fontWeight: 400 }}>
             I'm Parthib Saha — a frontend engineer and AI specialist from West Bengal, India.
             I craft interfaces that sit at the intersection of aesthetics and intelligence.
-          </p>
+          </motion.p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <a href="#work" className="btn-primary">
@@ -206,6 +269,23 @@ function Hero() {
           style={{ height: "auto" }}
         />
       </motion.div>
+
+      {/* Decorative SVGs */}
+      <motion.img 
+         src="/First-Internet-Icon.svg" 
+         alt="" 
+         aria-hidden="true" 
+         whileHover={{ rotate: 180, scale: 1.2 }}
+         transition={{ duration: 0.5 }}
+         style={{ position: "absolute", top: "10%", right: "2%", width: 60, opacity: 0.8 }} 
+      />
+      <motion.img 
+         src="/FI-Hover-Graphic.svg" 
+         alt="" 
+         aria-hidden="true" 
+         whileHover={{ scale: 1.5, rotate: 15 }}
+         style={{ position: "absolute", bottom: "5%", left: "1%", width: 150, opacity: 0.1, zIndex: 0 }} 
+      />
     </section>
   );
 }
@@ -213,16 +293,16 @@ function Hero() {
 /* ── Stats Ticker ─────────────────────────────────────────────── */
 function StatsTicker() {
   return (
-    <section style={{ background: "var(--black)", color: "var(--white)", padding: "32px 0", overflow: "hidden" }}>
+    <section style={{ background: "var(--black)", color: "var(--white)", padding: "16px 0", overflow: "hidden" }}>
       <div style={{ overflow: "hidden" }}>
         <div className="marquee-track" style={{ gap: "80px" }}>
           {[...STATS, ...STATS].map((s, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "baseline", gap: 16, flexShrink: 0 }}>
+            <motion.div key={i} whileHover={{ scale: 1.1, y: -5 }} style={{ display: "flex", alignItems: "baseline", gap: 16, flexShrink: 0 }}>
               <span className="stat-value" style={{ color: "var(--orange)" }}>{s.value}{s.suffix}</span>
               <span style={{ fontFamily: "var(--font-body)", fontSize: "1rem", opacity: 0.6, textTransform: "uppercase", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
                 {s.label}
               </span>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
