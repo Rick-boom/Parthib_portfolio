@@ -95,6 +95,8 @@ function BIOS_Boot({ onComplete }) {
     "System ready. Welcome, USER.",
   ];
 
+  const [mem, setMem] = useState(0);
+
   useEffect(() => {
     let currentLine = 0;
     const interval = setInterval(() => {
@@ -103,10 +105,24 @@ function BIOS_Boot({ onComplete }) {
         currentLine++;
       } else {
         clearInterval(interval);
-        setTimeout(onComplete, 1000);
+        setTimeout(onComplete, 1200);
       }
-    }, 200);
-    return () => clearInterval(interval);
+    }, 250);
+
+    const memInterval = setInterval(() => {
+      setMem(prev => {
+        if (prev >= 16384) {
+          clearInterval(memInterval);
+          return 16384;
+        }
+        return prev + 512;
+      });
+    }, 30);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(memInterval);
+    };
   }, []);
 
   return (
@@ -123,6 +139,7 @@ function BIOS_Boot({ onComplete }) {
         </div>
       </div>
       <div className="flex flex-col gap-2">
+        <div>{'>'} Memory Test: {mem}KB OK</div>
         {logs.map((log, i) => (
           <div key={i}>{'>'} {log}</div>
         ))}
@@ -155,17 +172,20 @@ function Typewriter({ text, isActive, speed = 50, delay = 0 }) {
       return;
     }
     
-    let i = 0;
+    let interval;
     const timeout = setTimeout(() => {
-      const interval = setInterval(() => {
-        setDisplayedText(text.slice(0, i + 1));
+      let i = 0;
+      interval = setInterval(() => {
+        setDisplayedText(prev => text.slice(0, prev.length + 1));
         i++;
         if (i >= text.length) clearInterval(interval);
       }, speed);
-      return () => clearInterval(interval);
     }, delay);
     
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      if (interval) clearInterval(interval);
+    };
   }, [isActive, text, speed, delay]);
 
   return (
@@ -580,7 +600,7 @@ export default function App() {
                 <div className="terminal-border" />
                 <div className="text-center relative z-10">
                   <motion.h2 
-                    animate={isActive ? { scale: [1, 1.05, 1] } : {}}
+                    animate={activePanel === 6 ? { scale: [1, 1.05, 1] } : {}}
                     transition={{ repeat: Infinity, duration: 2 }}
                     className="text-6xl md:text-9xl font-bold mb-4 tracking-tighter"
                   >
