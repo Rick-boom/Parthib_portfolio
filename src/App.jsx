@@ -261,8 +261,6 @@ function Work() {
 
 /* ── Skills ──────────────────────────────────────────────────── */
 function Skills() {
-  const [activeSkill, setActiveSkill] = useState(0);
-
   return (
     <section id="skills" className="section" style={{ background: "var(--white)" }}>
       <div className="container">
@@ -271,63 +269,53 @@ function Skills() {
           <h2 className="text-display">What I do,<br />exceptionally well.</h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }} className="skills-grid">
-          {/* Skill List */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {SKILLS.map((s, i) => (
-              <motion.div
-                key={i}
-                className="skill-card"
-                onClick={() => setActiveSkill(i)}
-                style={{ cursor: "pointer", borderColor: activeSkill === i ? "var(--black)" : "var(--border)", background: activeSkill === i ? "var(--black)" : "var(--white)", color: activeSkill === i ? "var(--white)" : "var(--black)", transition: "all 0.25s" }}
-                whileHover={{ scale: 1.01 }}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-              >
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 20 }}>
-                  <span style={{ fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "1rem", opacity: 0.4, letterSpacing: "-0.02em", flexShrink: 0, marginTop: 2 }}>({s.num})</span>
-                  <div>
-                    <h3 style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "1.2rem", letterSpacing: "-0.02em", marginBottom: 6 }}>{s.label}</h3>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", opacity: 0.7, lineHeight: 1.55 }}>{s.detail}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Lottie Preview */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeSkill}
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.45 }}
-                style={{ width: "min(100%, 380px)" }}
-              >
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))",
+          gap: 24,
+        }}>
+          {SKILLS.map((s, i) => (
+            <motion.div
+              key={i}
+              className="skill-card"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -6 }}
+              style={{ display: "flex", flexDirection: "column", gap: 0 }}
+            >
+              {/* Lottie animation at the top of each card */}
+              <div style={{ width: "100%", aspectRatio: "1 / 1", background: "var(--grey)", borderRadius: 10, overflow: "hidden", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <dotlottie-player
-                  src={SKILLS[activeSkill].lottie}
+                  src={s.lottie}
                   autoplay
                   loop
-                  style={{ width: "100%", height: "auto" }}
+                  style={{ width: "100%", height: "100%" }}
                 />
-              </motion.div>
-            </AnimatePresence>
-          </div>
+              </div>
+
+              {/* Skill info */}
+              <span style={{
+                fontFamily: "var(--font-heading)", fontWeight: 800, fontSize: "0.9rem",
+                opacity: 0.3, letterSpacing: "-0.01em", marginBottom: 8, display: "block"
+              }}>({s.num})</span>
+              <h3 style={{
+                fontFamily: "var(--font-heading)", fontWeight: 700,
+                fontSize: "1.2rem", letterSpacing: "-0.02em", marginBottom: 10
+              }}>{s.label}</h3>
+              <p style={{
+                fontFamily: "var(--font-body)", fontSize: "0.875rem",
+                color: "#666", lineHeight: 1.6
+              }}>{s.detail}</p>
+            </motion.div>
+          ))}
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .skills-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </section>
   );
 }
+
 
 /* ── About ───────────────────────────────────────────────────── */
 function About() {
