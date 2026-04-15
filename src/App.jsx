@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import "./index.css";
 
 /* ── Data ──────────────────────────────────────────────────── */
@@ -60,10 +61,10 @@ const STATS = [
    Plays only when the user hovers (desktop) or touches (mobile).
    Stays on first frame when idle.                                */
 function LottieCard({ src, style = {}, cardStyle = {} }) {
-  const ref = useRef(null);
+  const [dotLottie, setDotLottie] = useState(null);
 
-  const play = () => ref.current?.play?.();
-  const stop = () => ref.current?.stop?.();
+  const play = () => { if (dotLottie) dotLottie.play(); };
+  const stop = () => { if (dotLottie) dotLottie.pause(); };
 
   return (
     <div
@@ -73,10 +74,11 @@ function LottieCard({ src, style = {}, cardStyle = {} }) {
       onTouchStart={play}
       onTouchEnd={stop}
     >
-      <dotlottie-player
-        ref={ref}
+      <DotLottieReact
         src={src}
         loop
+        autoplay={false}
+        dotLottieRefCallback={setDotLottie}
         style={{ width: "100%", height: "100%", ...style }}
       />
     </div>
@@ -608,15 +610,6 @@ function Footer() {
 
 /* ── App ─────────────────────────────────────────────────────── */
 export default function App() {
-  // Register DotLottie web component
-  useEffect(() => {
-    import("@dotlottie/player-component").then(({ DotLottiePlayer }) => {
-      if (!customElements.get("dotlottie-player")) {
-        customElements.define("dotlottie-player", DotLottiePlayer);
-      }
-    }).catch(() => {});
-  }, []);
-
   return (
     <>
       <Navbar />
