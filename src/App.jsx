@@ -52,11 +52,38 @@ const SKILLS = [
 const STATS = [
   { value: "8.1", label: "CGPA", suffix: "" },
   { value: "4+", label: "Projects Shipped", suffix: "" },
-  { value: "20", label: "Years on Earth", suffix: "yrs" },
+  { value: "22", label: "Years on Earth", suffix: "yrs" },
   { value: "3+", label: "Languages Mastered", suffix: "" },
 ];
 
-/* ── Arrow SVG ─────────────────────────────────────────────── */
+/* ── Hover/Touch Lottie Card ───────────────────────────────────
+   Plays only when the user hovers (desktop) or touches (mobile).
+   Stays on first frame when idle.                                */
+function LottieCard({ src, style = {}, cardStyle = {} }) {
+  const ref = useRef(null);
+
+  const play = () => ref.current?.play?.();
+  const stop = () => ref.current?.stop?.();
+
+  return (
+    <div
+      style={{ ...cardStyle }}
+      onMouseEnter={play}
+      onMouseLeave={stop}
+      onTouchStart={play}
+      onTouchEnd={stop}
+    >
+      <dotlottie-player
+        ref={ref}
+        src={src}
+        loop
+        style={{ width: "100%", height: "100%", ...style }}
+      />
+    </div>
+  );
+}
+
+
 const ArrowIcon = ({ size = 20 }) => (
   <svg width={size} height={size * 0.87} fill="none" viewBox="0 0 23 20">
     <path fill="currentColor" stroke="transparent"
@@ -165,19 +192,18 @@ function Hero() {
         </motion.div>
       </div>
 
-      {/* Floating Lottie world */}
+      {/* Floating Lottie world — hover/touch to animate */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%)", width: "clamp(280px, 45vw, 640px)", pointerEvents: "none", zIndex: 0 }}
+        style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%)", width: "clamp(280px, 45vw, 640px)", pointerEvents: "all", zIndex: 0 }}
         className="hide-mobile"
       >
-        <dotlottie-player
+        <LottieCard
           src="/web-dev.c0017e.lottie"
-          autoplay
-          loop
-          style={{ width: "100%", height: "auto" }}
+          cardStyle={{ width: "100%" }}
+          style={{ height: "auto" }}
         />
       </motion.div>
     </section>
@@ -285,13 +311,11 @@ function Skills() {
               whileHover={{ y: -6 }}
               style={{ display: "flex", flexDirection: "column", gap: 0 }}
             >
-              {/* Lottie animation at the top of each card */}
-              <div style={{ width: "100%", aspectRatio: "1 / 1", background: "var(--grey)", borderRadius: 10, overflow: "hidden", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <dotlottie-player
+              {/* Lottie — hover or touch to play */}
+              <div style={{ width: "100%", aspectRatio: "1 / 1", background: "var(--grey)", borderRadius: 10, overflow: "hidden", marginBottom: 20 }}>
+                <LottieCard
                   src={s.lottie}
-                  autoplay
-                  loop
-                  style={{ width: "100%", height: "100%" }}
+                  cardStyle={{ width: "100%", height: "100%" }}
                 />
               </div>
 
