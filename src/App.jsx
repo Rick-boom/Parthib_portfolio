@@ -202,7 +202,7 @@ function Navbar() {
             <button 
               className="show-mobile-only btn-hamburger" 
               onClick={() => setMenuOpen(!menuOpen)}
-              style={{ background: "transparent", border: "none", color: "var(--white)", cursor: "pointer", display: "none", alignItems: "center", justifyContent: "center", padding: 4 }}
+              style={{ background: "transparent", border: "none", color: "var(--white)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 4 }}
             >
               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d={menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path>
@@ -247,9 +247,9 @@ function Navbar() {
 /* ── Hero ────────────────────────────────────────────────────── */
 function Hero() {
   return (
-    <section id="home" style={{ minHeight: "100dvh", paddingTop: "7rem", paddingBottom: "3rem", background: "var(--white)", position: "relative", overflow: "hidden" }}>
+    <section id="home" className="hero-section" style={{ minHeight: "100dvh", paddingTop: "8rem", paddingBottom: "3rem", background: "var(--white)", position: "relative", overflow: "hidden" }}>
       <div className="container">
-        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "clamp(24px, 4vw, 60px)", alignItems: "center", minHeight: "calc(100dvh - 10rem)" }}>
+        <div className="hero-grid">
           
           {/* LEFT: Content */}
           <div style={{ display: "flex", flexDirection: "column", gap: 32, position: "relative", zIndex: 10 }}>
@@ -305,13 +305,12 @@ function Hero() {
             </motion.div>
           </div>
 
-          {/* RIGHT: Lottie animation */}
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1.6 }}
             transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="hero-lottie-wrapper"
-            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", transformOrigin: "center center" }}
+            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
           >
             <LottieCard
               src="/web-dev.c0017e.lottie"
@@ -323,13 +322,32 @@ function Hero() {
       </div>
 
       {/* Decorative SVG */}
-      <motion.img
-        src="/FI-Hover-Graphic.svg"
-        alt=""
-        aria-hidden="true"
-        whileHover={{ scale: 1.5, rotate: 15 }}
-        style={{ position: "absolute", bottom: "5%", left: "1%", width: 150, opacity: 0.07, zIndex: 0, pointerEvents: "none" }}
-      />
+      <style>{`
+        .hero-grid {
+          display: grid;
+          grid-template-columns: 1fr 1.3fr;
+          gap: clamp(24px, 4vw, 60px);
+          align-items: center;
+          min-height: calc(100dvh - 10rem);
+        }
+        @media (max-width: 991px) {
+          .hero-grid {
+            grid-template-columns: 1fr;
+            text-align: center;
+            min-height: auto;
+            gap: 48px;
+            padding-top: 2rem;
+          }
+          .hero-lottie-wrapper {
+            order: -1;
+            transform: scale(0.8) !important;
+            margin-bottom: 20px;
+          }
+          .text-hero {
+            font-size: clamp(3.5rem, 12vw, 5rem) !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
