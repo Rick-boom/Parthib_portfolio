@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parthib Saha - Resume</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a0a0a;
+            --accent: #fa4e03;
+            --text-main: #2d2d2d;
+            --text-light: #555;
+            --bg-page: #ffffff;
+            --border: #e0ddd8;
+        }
+
+        @media print {
+            @page { margin: 1cm; size: A4; }
+            body { margin: 0; }
+            .no-print { display: none; }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.32;
+            -webkit-font-smoothing: antialiased;
+            font-size: 13px;
+        }
+
+        .resume-container {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 0.5rem 1rem;
+        }
+
+        /* ── Header ────────────────────────────────────────── */
+        header {
+            border-bottom: 2.5px solid var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .header-left .title {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-top: 2px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 2px 14px;
+        }
+
+        .header-right a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* ── Section Structure ────────────────────────────── */
+        section { margin-bottom: 12px; }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .section-header h2 {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+        }
+
+        .section-header .line { height: 1px; background: var(--border); flex-grow: 1; }
+
+        /* ── Grid ─────────────────────────────────── */
+        .mid-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 12px;
+        }
+
+        /* ── Blocks ────────────────────────────────────────── */
+        .grid-blocks { display: grid; grid-template-columns: 1fr; gap: 8px; }
+
+        .block { display: flex; justify-content: space-between; align-items: flex-start; }
+        .block-left { max-width: 80%; }
+        .block h3 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.98rem; font-weight: 700; margin-bottom: 1px; }
+        .block .sub { font-size: 0.82rem; color: var(--text-light); font-weight: 600; margin-bottom: 2px; }
+        .block-right { text-align: right; font-size: 0.72rem; font-weight: 700; color: var(--accent); }
+
+        .desc-list { list-style: none; margin-top: 2px; }
+        .desc-list li {
+            position: relative;
+            padding-left: 14px;
+            font-size: 0.82rem;
+            color: #333;
+            margin-bottom: 1px;
+        }
+        .desc-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* ── Skills & Tags ─────────────────────────────────── */
+        .skill-group { margin-bottom: 8px; }
+        .skill-group h4 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); margin-bottom: 4px; }
+        .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+        .tag {
+            background: #f9f9f9;
+            border: 1px solid var(--border);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* ── Controls ───────────────────────────────────────── */
+        .controls { position: fixed; bottom: 2rem; right: 2rem; z-index: 100; }
+        .btn-print {
+            background: var(--primary); color: white; padding: 10px 20px; border-radius: 50px;
+            font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; border: none; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.2s; font-size: 0.85rem;
+        }
+        .btn-print:hover { transform: translateY(-2px); background: var(--accent); }
+
+    </style>
+</head>
+<body>
+
+    <div class="no-print controls">
+        <button class="btn-print" onclick="window.print()">Download 1-Page PDF</button>
+    </div>
+
+    <div class="resume-container">
+        <header>
+            <div class="header-left">
+                <h1>Parthib Saha</h1>
+                <div class="title">Front-end Enthusiast</div>
+            </div>
+            <div class="header-right">
+                <div><a href="mailto:parthibsaha915@gmail.com">parthibsaha915@gmail.com</a></div>
+                <div>+91 93306 16676</div>
+                <div><a href="https://www.linkedin.com/in/parthib-saha-752a20203/" target="_blank">linkedin.com/in/parthib-saha</a></div>
+                <div>West Bengal, India</div>
+            </div>
+        </header>
+
+        <div class="mid-grid">
+            <section id="education" style="margin-bottom: 0;">
+                <div class="section-header">
+                    <h2>Education</h2>
+                    <div class="line"></div>
+                </div>
+                <div class="grid-blocks">
+                    <div class="block">
+                        <div class="block-left">
+                            <h3>BIT Mesra</h3>
+                            <div class="sub">B.Tech AI · CGPA: 8.1 / 10</div>
+                        </div>
+                        <div class="block-right">2023 — Pres</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-left">
+                            <h3>Vivekananda Academy</h3>
+                            <div class="sub">Class 12 · 88.8%</div>
+                        </div>
+                        <div class="block-right">2021 — 22</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-left">
+                            <h3>Gospel Home School</h3>
+                            <div class="sub">Class 10 · 89%</div>
+                        </div>
+                        <div class="block-right">2010 — 20</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="skills" style="margin-bottom: 0;">
+                <div class="section-header">
+                    <h2>Technical Toolkit</h2>
+                    <div class="line"></div>
+                </div>
+                <div class="skill-group">
+                    <h4>Core Tech</h4>
+                    <div class="tags">
+                        <span class="tag">C / C++</span>
+                        <span class="tag">JS (ES6+)</span>
+                        <span class="tag">HTML5/CSS3</span>
+                        <span class="tag">SQL</span>
+                        <span class="tag">Python</span>
+                    </div>
+                </div>
+                <div class="skill-group">
+                    <h4>Frameworks & Tools</h4>
+                    <div class="tags">
+                        <span class="tag">React.js</span>
+                        <span class="tag">Framer Motion</span>
+                        <span class="tag">Lottie</span>
+                        <span class="tag">Vite</span>
+                        <span class="tag">Tailwind</span>
+                        <span class="tag">Git</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section id="experience">
+            <div class="section-header">
+                <h2>Work Experience</h2>
+                <div class="line"></div>
+            </div>
+            <div class="block">
+                <div class="block-left">
+                    <h3>Operations & Marketing Associate</h3>
+                    <div class="sub">Family-Owned Business</div>
+                    <ul class="desc-list">
+                        <li>Managed customer relations and optimized service workflows to improve client satisfaction.</li>
+                        <li>Spearheaded local marketing initiatives to drive business growth and brand awareness.</li>
+                    </ul>
+                </div>
+                <div class="block-right">2022 — 2023</div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="section-header">
+                <h2>Featured Projects</h2>
+                <div class="line"></div>
+            </div>
+            <div class="grid-blocks">
+                <div class="block">
+                    <div class="block-left">
+                        <h3>Mission Control Portfolio</h3>
+                        <div class="sub">React · Framer Motion · Lottie · Serverless</div>
+                        <ul class="desc-list">
+                            <li>Orchestrated a high-fidelity personal portal with immersive glassmorphism UI.</li>
+                            <li>Engineered fluid layout transitions and interactive SVG micro-animations.</li>
+                        </ul>
+                    </div>
+                    <div class="block-right">2024</div>
+                </div>
+                <div class="block">
+                    <div class="block-left">
+                        <h3>CGPA Prediction Intelligence</h3>
+                        <div class="sub">Python · Scikit-Learn · NumPy · Matplotlib</div>
+                        <ul class="desc-list">
+                            <li>Architected a regression pipeline to predict academic performance with high precision.</li>
+                            <li>Applied advanced feature selection and data preprocessing for model optimization.</li>
+                        </ul>
+                    </div>
+                    <div class="block-right">2024</div>
+                </div>
+                <div class="block">
+                    <div class="block-left">
+                        <h3>Study Analyser Intelligence</h3>
+                        <div class="sub">Python · Pandas · Matplotlib</div>
+                        <ul class="desc-list">
+                            <li>Developed a data pipeline to surface insights from academic records and trends.</li>
+                            <li>Visualized multivariate metrics to drive informed study strategy optimizations.</li>
+                        </ul>
+                    </div>
+                    <div class="block-right">2023</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="achievements">
+            <div class="section-header">
+                <h2>Coding & logic</h2>
+                <div class="line"></div>
+            </div>
+            <div class="block">
+                <div class="block-left">
+                    <h3>LeetCode & DS/Algorithms</h3>
+                    <div class="sub">Active problem solver focusing on high-efficiency algorithmic patterns. Expertise in Space-Time complexity optimization and fundamental CS data structures.</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</body>
+</html>
