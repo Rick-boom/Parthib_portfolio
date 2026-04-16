@@ -556,19 +556,28 @@ function Contact() {
         body: JSON.stringify(form)
       });
       
-      const data = await res.json();
+      const contentType = res.headers.get("content-type");
+      let data = {};
+      
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error("Non-JSON response:", text);
+        data = { error: `Server Error ${res.status}: ${res.statusText || "Unexpected Response"}` };
+      }
       
       if (res.ok) {
         setStatus("sent");
         setForm({ name: "", email: "", message: "" });
       } else {
         setStatus("error");
-        setErrorMessage(data.error || "Something went wrong.");
+        setErrorMessage(data.error || `Error ${res.status}: Something went wrong.`);
       }
     } catch (err) {
-      console.error(err);
+      console.error("Fetch error:", err);
       setStatus("error");
-      setErrorMessage("Network error. Please try again later.");
+      setErrorMessage("Network error: The server could not be reached. Please check your internet or try again later.");
     }
   };
 
