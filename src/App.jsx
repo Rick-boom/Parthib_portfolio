@@ -340,7 +340,7 @@ function Hero() {
           }
           .hero-lottie-wrapper {
             order: -1;
-            transform: scale(0.8) !important;
+            transform: scale(1.3) !important;
             margin-bottom: 20px;
           }
           .text-hero {
