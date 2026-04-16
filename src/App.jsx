@@ -542,10 +542,12 @@ function About() {
 function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const submit = async (e) => {
     e.preventDefault();
     setStatus("sending");
+    setErrorMessage("");
     
     try {
       const res = await fetch("/api/contact", {
@@ -554,15 +556,19 @@ function Contact() {
         body: JSON.stringify(form)
       });
       
+      const data = await res.json();
+      
       if (res.ok) {
         setStatus("sent");
         setForm({ name: "", email: "", message: "" });
       } else {
         setStatus("error");
+        setErrorMessage(data.error || "Something went wrong.");
       }
     } catch (err) {
       console.error(err);
       setStatus("error");
+      setErrorMessage("Network error. Please try again later.");
     }
   };
 
@@ -581,6 +587,15 @@ function Contact() {
             <h2 className="text-display" style={{ marginBottom: 32 }}>
               Let's build<br />something<br /><span style={{ color: "var(--orange)" }}>brilliant.</span>
             </h2>
+            {status === "error" && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }} 
+                animate={{ opacity: 1, height: "auto" }}
+                style={{ background: "#fee2e2", border: "1px solid #ef4444", color: "#b91c1c", padding: "12px 16px", borderRadius: 8, marginBottom: 24, fontSize: "0.9rem", fontFamily: "var(--font-body)" }}
+              >
+                <strong>Error:</strong> {errorMessage}
+              </motion.div>
+            )}
             <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "#666", lineHeight: 1.7, maxWidth: 360 }}>
               Open to internships, freelance work, and long-term collaborations. If you have an idea that deserves a great execution — get in touch.
             </p>
