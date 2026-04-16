@@ -247,87 +247,93 @@ function Navbar() {
 /* ── Hero ────────────────────────────────────────────────────── */
 function Hero() {
   return (
-    <section id="home" style={{ minHeight: "100dvh", paddingTop: "10rem", paddingBottom: "3rem", background: "var(--white)", position: "relative", overflow: "hidden" }}>
+    <section id="home" style={{ minHeight: "100dvh", paddingTop: "7rem", paddingBottom: "3rem", background: "var(--white)", position: "relative", overflow: "hidden" }}>
       <div className="container">
-        {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 40 }}
-        >
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", display: "inline-block", boxShadow: "0 0 0 3px rgba(34,197,94,0.2)" }} />
-          <span style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 500, color: "#666", letterSpacing: "0.02em" }}>
-            B.Tech AI @ BIT Mesra · Open to opportunities
-          </span>
-        </motion.div>
+        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(24px, 4vw, 60px)", alignItems: "center", minHeight: "calc(100dvh - 10rem)" }}>
+          
+          {/* LEFT: Content */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 32, position: "relative", zIndex: 10 }}>
+            {/* Eyebrow */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              style={{ display: "flex", alignItems: "center", gap: 12 }}
+            >
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e", display: "inline-block", boxShadow: "0 0 0 3px rgba(34,197,94,0.2)" }} />
+              <span style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 500, color: "#666", letterSpacing: "0.02em" }}>
+                B.Tech AI @ BIT Mesra · Open to opportunities
+              </span>
+            </motion.div>
 
-        {/* Big headline */}
-        <div style={{ overflow: "hidden" }}>
-          <motion.h1
-            className="text-hero"
-            initial={{ y: "110%" }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-          >
-            Building<br />
-            <span style={{ color: "var(--orange)" }}>digital</span><br />
-            that thinks.
-          </motion.h1>
-        </div>
+            {/* Big headline */}
+            <div style={{ overflow: "hidden" }}>
+              <motion.h1
+                className="text-hero"
+                initial={{ y: "110%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+              >
+                Building<br />
+                <span style={{ color: "var(--orange)" }}>digital</span><br />
+                that thinks.
+              </motion.h1>
+            </div>
 
-        {/* Sub-row */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.5 }}
-          style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: 32, marginTop: 48, position: "relative", zIndex: 10 }}
-        >
-          <motion.p whileHover={{ scale: 1.02, color: "var(--black)" }} style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", lineHeight: 1.65, color: "#555", maxWidth: 360, fontWeight: 400 }}>
-            I'm Parthib Saha — a frontend engineer and AI specialist from West Bengal, India.
-            I craft interfaces that sit at the intersection of aesthetics and intelligence.
-          </motion.p>
+            {/* Sub-row */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
+              style={{ display: "flex", flexDirection: "column", gap: 24 }}
+            >
+              <motion.p whileHover={{ scale: 1.02 }} style={{ fontFamily: "var(--font-body)", fontSize: "1.05rem", lineHeight: 1.65, color: "#555", maxWidth: 360, fontWeight: 400 }}>
+                I'm Parthib Saha — a frontend engineer and AI specialist from West Bengal, India.
+                I craft interfaces that sit at the intersection of aesthetics and intelligence.
+              </motion.p>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <a href="#work" className="btn-primary">
-              <span className="btn-label">View my work</span>
-              <span className="btn-arrow"><ArrowIcon /></span>
-            </a>
-            <a href="/Parthib_Saha_Resume.pdf" download className="btn-primary">
-              <span className="btn-label" style={{ background: "transparent", color: "var(--black)" }}>Download CV</span>
-              <span className="btn-arrow"><ArrowIcon /></span>
-            </a>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+                <a href="#work" className="btn-primary">
+                  <span className="btn-label">View my work</span>
+                  <span className="btn-arrow"><ArrowIcon /></span>
+                </a>
+                <a href="/Parthib_Saha_Resume.pdf" download className="btn-primary">
+                  <span className="btn-label" style={{ background: "transparent", color: "var(--black)" }}>Download CV</span>
+                  <span className="btn-arrow"><ArrowIcon /></span>
+                </a>
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
+
+          {/* RIGHT: Lottie animation */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="hero-lottie-wrapper"
+            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
+          >
+            <LottieCard
+              src="/web-dev.c0017e.lottie"
+              cardStyle={{ width: "100%", maxWidth: 600 }}
+              style={{ height: "auto" }}
+            />
+          </motion.div>
+        </div>
       </div>
 
-      {/* Responsive Floating Lottie world */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1.4 }}
-        transition={{ duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%) scale(1.4)", transformOrigin: "right center", width: "clamp(400px, 65vw, 1000px)", pointerEvents: "all", zIndex: 0 }}
-        className="hero-lottie-wrapper"
-      >
-        <LottieCard
-          src="/web-dev.c0017e.lottie"
-          cardStyle={{ width: "100%" }}
-          style={{ height: "auto" }}
-        />
-      </motion.div>
-
-      {/* Decorative SVGs */}
-      <motion.img 
-         src="/FI-Hover-Graphic.svg" 
-         alt="" 
-         aria-hidden="true" 
-         whileHover={{ scale: 1.5, rotate: 15 }}
-         style={{ position: "absolute", bottom: "5%", left: "1%", width: 150, opacity: 0.1, zIndex: 0 }} 
+      {/* Decorative SVG */}
+      <motion.img
+        src="/FI-Hover-Graphic.svg"
+        alt=""
+        aria-hidden="true"
+        whileHover={{ scale: 1.5, rotate: 15 }}
+        style={{ position: "absolute", bottom: "5%", left: "1%", width: 150, opacity: 0.07, zIndex: 0, pointerEvents: "none" }}
       />
     </section>
   );
 }
+
 
 /* ── Stats Ticker ─────────────────────────────────────────────── */
 function StatsTicker() {
