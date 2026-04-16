@@ -249,7 +249,7 @@ function Hero() {
   return (
     <section id="home" style={{ minHeight: "100dvh", paddingTop: "7rem", paddingBottom: "3rem", background: "var(--white)", position: "relative", overflow: "hidden" }}>
       <div className="container">
-        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(24px, 4vw, 60px)", alignItems: "center", minHeight: "calc(100dvh - 10rem)" }}>
+        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "clamp(24px, 4vw, 60px)", alignItems: "center", minHeight: "calc(100dvh - 10rem)" }}>
           
           {/* LEFT: Content */}
           <div style={{ display: "flex", flexDirection: "column", gap: 32, position: "relative", zIndex: 10 }}>
@@ -308,14 +308,14 @@ function Hero() {
           {/* RIGHT: Lottie animation */}
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 1, scale: 1.6 }}
             transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="hero-lottie-wrapper"
-            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
+            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", transformOrigin: "center center" }}
           >
             <LottieCard
               src="/web-dev.c0017e.lottie"
-              cardStyle={{ width: "100%", maxWidth: 600 }}
+              cardStyle={{ width: "100%", maxWidth: 800 }}
               style={{ height: "auto" }}
             />
           </motion.div>
