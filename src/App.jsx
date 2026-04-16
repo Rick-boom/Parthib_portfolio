@@ -305,9 +305,9 @@ function Hero() {
       {/* Responsive Floating Lottie world */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
+        animate={{ opacity: 1, scale: 1.4 }}
         transition={{ duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%)", width: "clamp(280px, 45vw, 640px)", pointerEvents: "all", zIndex: 0 }}
+        style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%) scale(1.4)", transformOrigin: "right center", width: "clamp(400px, 65vw, 1000px)", pointerEvents: "all", zIndex: 0 }}
         className="hero-lottie-wrapper"
       >
         <LottieCard
