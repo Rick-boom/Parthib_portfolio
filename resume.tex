@@ -1,0 +1,174 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{brandorange}{HTML}{FA4E03}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[colorlinks=true, urlcolor=brandorange, linkcolor=brandorange]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large\color{brandorange}
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape \color{brandorange} Parthib Saha} \\ \vspace{2pt}
+    \small +91 93306 16676 $\bullet$ \href{mailto:parthibsaha915@gmail.com}{\underline{parthibsaha915@gmail.com}} $\bullet$ 
+    \href{https://linkedin.com/in/parthib-saha-752a20203/}{\underline{linkedin.com/in/parthib-saha-752a20203}} $\bullet$
+    West Bengal, India
+\end{center}
+
+%-----------SUMMARY-----------
+\section{Summary}
+  \vspace{2pt}
+  \small{Driven Artificial Intelligence undergraduate and Front-end Enthusiast with hands-on experience in modern web development, machine learning pipelines, and data analytics. Proven ability to architect responsive interfaces using React and engineer predictive regression models using Python. Passionate problem solver dedicated to writing optimized code, applying robust data structures, and delivering scalable technical solutions.} \\ \vspace{4pt}
+  \small{\textbf{Core Competencies:} Frontend Web Development $\bullet$ Machine Learning $\bullet$ Data Analytics $\bullet$ Predictive Modeling $\bullet$ Customer Relationship Management (CRM) $\bullet$ Software Engineering}
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Birla Institute of Technology, Mesra}{Mesra, Jharkhand}
+      {B.Tech in Artificial Intelligence; CGPA: 8.1 / 10}{Sept 2023 -- Present}
+    \resumeSubheading
+      {Vivekananda Academy}{Serampore, West Bengal}
+      {Class 12 (WBCHSE); Percentage: 88.8\%}{2021 -- 2022}
+    \resumeSubheading
+      {Gospel Home School}{Rishra, West Bengal}
+      {Class 10 (ICSE); Percentage: 89.0\%}{2010 -- 2020}
+  \resumeSubHeadingListEnd
+
+
+%-----------EXPERIENCE-----------
+\section{Work Experience}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Operations \& Marketing Associate}{2022 -- 2023}
+      {Family-Owned Business}{West Bengal, India}
+      \resumeItemListStart
+        \resumeItem{Directed customer relationship management workflows, resolving 50+ weekly client inquiries and optimizing daily service delivery operations.}
+        \resumeItem{Executed strategic local marketing campaigns across multiple channels, successfully driving brand visibility and supporting a measurable increase in customer acquisition.}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading
+          {\textbf{Mission Control Portfolio} $|$ \emph{React, Framer Motion, Node.js, Vercel}}{2024}
+          \resumeItemListStart
+            \resumeItem{Architected and deployed a 100\% responsive personal portal utilizing \textbf{React.js} and modern CSS to create an immersive, device-agnostic user interface.}
+            \resumeItem{Engineered fluid layout transitions and integrated 10+ interactive SVG micro-animations via \textbf{Framer Motion} to enhance digital accessibility.}
+            \resumeItem{Developed a scalable serverless backend architecture utilizing \textbf{Node.js} and \textbf{Vercel} functions to securely process real-time contact form submissions.}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{CGPA Prediction Intelligence} $|$ \emph{Python, Scikit-Learn, NumPy, Matplotlib}}{2024}
+          \resumeItemListStart
+            \resumeItem{Engineered a predictive machine learning pipeline using \textbf{Python} and \textbf{Scikit-Learn} to forecast academic outcomes based on historical datasets with 1000+ variables.}
+            \resumeItem{Executed comprehensive data preprocessing and feature engineering, deploying Linear Regression and Decision Tree models to achieve high predictive accuracy.}
+          \resumeItemListEnd
+      \resumeProjectHeading
+          {\textbf{Study Analyser Intelligence} $|$ \emph{Python, Pandas, Matplotlib}}{2023}
+          \resumeItemListStart
+            \resumeItem{Programmed a robust data processing system using \textbf{Python} and \textbf{Pandas} to ingest, clean, and comprehensively analyze multi-dimensional academic records.}
+            \resumeItem{Generated statistical reports and visualized complex data trends using \textbf{Matplotlib}, directly informing strategic study schedule optimizations.}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+
+%-----------PROGRAMMING SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages/Core}{: C / C++, JavaScript (ES6+), HTML5, CSS3, SQL, Python} \\
+     \textbf{Frameworks \& Tools}{: React.js, Framer Motion, Lottie Animation, Vite, Tailwind CSS, Git, GitHub} \\
+    }}
+ \end{itemize}
+
+
+%-----------ACHIEVEMENTS / ADDITIONAL-----------
+\section{Coding \& Problem Solving}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+      \textbf{LeetCode \& Algorithms}{: Active problem solver focusing on high-efficiency algorithmic patterns. Expertise in Space-Time complexity optimization, fundamental Computer Science data structures, and continuous logic refinement.}
+    }}
+ \end{itemize}
+
+%-------------------------------------------
+\end{document}
