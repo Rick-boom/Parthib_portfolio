@@ -19,6 +19,8 @@
  *   scroll     "true": everything below the first screen starts unbuilt, and a
  *              small team of agents builds each part as it scrolls into view
  *   scroll-agents  size of that team, 1–24                 (default 8)
+ *   scroll-pause   agents work only while the reader is scrolling down and freeze when
+ *                  the scrolling stops (default on; "false" lets them finish what is on screen)
  *   scroll-start   how far up the screen a part must scroll before it is built:
  *                  0.7 = 70% of the way down from the top (default), 0.5 = the middle
  *
@@ -43,6 +45,7 @@
     scroll: D.scroll === 'true',
     scrollAgents: clamp(Math.round(+D.scrollAgents) || 8, 1, 24),
     scrollStart: clamp(+D.scrollStart || 0.7, 0.3, 1),
+    scrollPause: D.scrollPause !== 'false',
   };
   const AGENT_CHOICES = [8, 24, 48];
 
@@ -346,6 +349,16 @@ html[data-rb-canvas] body{${canvasCss};background-size:22px 22px!important;backg
     return innerHeight * (atEnd ? 1 : CFG.scrollStart);
   };
 
+  const atPageEnd = () => scrollY + innerHeight >= document.documentElement.scrollHeight - 4;
+  // agents work only while the reader is scrolling down; the last stretch of the page, which cannot scroll, always builds
+  const moving = R => !CFG.scrollPause || now() - R.lastDown < 420 || atPageEnd();
+  async function gate(R) {
+    if (R.mode !== 'scroll' || moving(R)) return;
+    ui.paused(true);
+    while (alive(R) && !moving(R)) await sleep(50);
+    if (alive(R)) ui.paused(false);
+  }
+
   function startScroll() {
     if (run || reduce) return false;
     const root = document.querySelector(CFG.root);
@@ -362,8 +375,11 @@ html[data-rb-canvas] body{${canvasCss};background-size:22px 22px!important;backg
     const R = {
       mode: 'scroll', alive: true, layers: hidden, done: 0, t0: now(), agents: [],
       pending: new Set(hidden), ghost: HL ? new Highlight() : null,
-      base: CFG.speed * 1.5, sp: CFG.speed * 1.5, cap: n, inView: 0, busy: 0,
+      base: CFG.speed * (CFG.scrollPause ? 2.3 : 1.5), sp: CFG.speed * 1.5, cap: n, inView: 0, busy: 0,
+      lastY: scrollY, lastDown: 0,
     };
+    R.onScroll = () => { const y = scrollY; if (y > R.lastY + 0.5) R.lastDown = now(); R.lastY = y; };
+    addEventListener('scroll', R.onScroll, { passive: true });
     run = R;
     if (R.ghost) {
       for (const L of hidden) for (const t of L.texts) {
@@ -415,6 +431,8 @@ html[data-rb-canvas] body{${canvasCss};background-size:22px 22px!important;backg
 
   async function scrollLoop(R, a) {
     while (alive(R)) {
+      await gate(R);
+      if (!alive(R)) return;
       const L = pickScroll(R, a);
       ui.progress(R);
       if (!L) {
@@ -532,6 +550,7 @@ html[data-rb-canvas] body{${canvasCss};background-size:22px 22px!important;backg
     const r = docRect(L.el);
     if (r.w < 1 && r.h < 1) { reveal(L, 'none', sp); L.state = 2; return; }
     await a.travel(r.x, r.y, sp);
+    await gate(R);
     if (!alive(R)) return;
     const box = makeBox(a, L, r);
     if (L.media || L.paint) {
@@ -628,6 +647,7 @@ html[data-rb-canvas] body{${canvasCss};background-size:22px 22px!important;backg
       }
       if (ti >= T.length) break;
       await sleep(34);
+      await gate(R);
     }
     caret.remove();
   }
@@ -652,6 +672,7 @@ html[data-rb-canvas] body{${canvasCss};background-size:22px 22px!important;backg
   function cleanup(R) {
     R.alive = false;
     if (R.onKey) document.removeEventListener('keydown', R.onKey);
+    if (R.onScroll) removeEventListener('scroll', R.onScroll);
     for (const L of R.layers) L.el.removeAttribute('data-rb-hide');
     if (HL) CSS.highlights.delete('rb-ghost');
     document.documentElement.removeAttribute('data-rb-canvas');
@@ -726,10 +747,18 @@ html[data-rb-canvas] body{${canvasCss};background-size:22px 22px!important;backg
     scrolling(n, total) {
       if (!this.el) return;
       this.el.innerHTML = `<span class="rb-live" aria-hidden="true"></span>${this.dots()}
-        <span class="rb-stat"><b>${n}</b> agents<span class="rb-hide-sm"> build as you scroll</span></span>
+        <span class="rb-stat"><b>${n}</b> agents<span class="rb-hide-sm" data-k="mode"> build as you scroll</span></span>
         <span class="rb-stat"><b data-k="done">0</b> / ${total}<span class="rb-hide-sm"> layers</span></span>
         <span class="rb-prog rb-hide-sm"><i></i></span>
         <button type="button" class="rb-chip" data-act="skip">Show all</button>`;
+    },
+    paused(on) {
+      if (!this.el || this.isPaused === on) return;
+      this.isPaused = on;
+      const m = this.el.querySelector('[data-k="mode"]');
+      if (m) m.textContent = on ? ' paused, scroll to continue' : ' build as you scroll';
+      const dot = this.el.querySelector('.rb-live');
+      if (dot) dot.style.animationPlayState = on ? 'paused' : 'running';
     },
     scrollDone(n, skipped) {
       if (!this.el) return;
