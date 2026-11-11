@@ -1,0 +1,193 @@
+<div id="site">
+  <header class="site">
+    <div class="container site__in">
+      <a class="wordmark" href="#top" aria-label="Parthib Saha, home">Parthib<span>_</span></a>
+      <nav class="site__links" aria-label="Sections">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a href="/Parthib_Saha_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+        <button class="key key--sm" type="button" data-rebuild>Rebuild</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <canvas class="field" aria-hidden="true"></canvas>
+      <figure class="hero__photo" aria-hidden="true">
+        <img src="/img/parthib-code.png" width="1108" height="1135" alt="" fetchpriority="high">
+      </figure>
+      <p class="hero__word" aria-hidden="true">Portfolio</p>
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <p class="hero__hello">Hello, I'm</p>
+          <h1 id="hero-title">Parthib Saha</h1>
+          <p class="hero__role">Developer and designer</p>
+          <p class="hero__lede">I build AI products and real-time web apps, end to end.</p>
+          <div class="hero__keys">
+            <a class="key key--primary" href="#work">See my work</a>
+            <button class="key" type="button" data-rebuild>Rebuild this page</button>
+          </div>
+          <p class="hero__where">B.Tech in Artificial Intelligence at BIT Mesra, from West Bengal.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="work" aria-labelledby="work-title">
+      <div class="container">
+        <div class="section__head">
+          <h2 id="work-title">Selected <span class="red">work</span></h2>
+          <p>Three products I designed and shipped, shown as they run today.</p>
+        </div>
+        <div class="work">
+          <article class="proj">
+            <div class="shot cut"><img src="/img/work-smart-reco.webp" width="1600" height="1000" loading="lazy" alt="Smart Reco storefront: a green hero reading Every product, plus a smarter pick beside it."></div>
+            <div class="proj__meta"><h3>Smart Reco</h3><span class="proj__kind">Recommendation engine, team project</span></div>
+            <p>A grocery storefront that finds the best in-stock substitute the moment an item runs out.</p>
+            <p class="proj__stack">MongoDB, Express, React, Node and the Gemini API</p>
+            <div class="proj__links"><a href="https://smart-reco-frontend.vercel.app" target="_blank" rel="noopener">Live site</a><a href="https://github.com/Rick-boom/Smart-Reco-Engine" target="_blank" rel="noopener">Source on GitHub</a></div>
+          </article>
+          <article class="proj">
+            <div class="shot cut"><img src="/img/work-placementprep.webp" width="1600" height="1000" loading="lazy" alt="PlacementPrep AI dashboard: Master Your Coding Interviews, with a button to start a six-question mock interview."></div>
+            <div class="proj__meta"><h3>PlacementPrep AI</h3><span class="proj__kind">Multimodal AI interviewer</span></div>
+            <p>A mock interviewer that grades your code against what you explain out loud.</p>
+            <p class="proj__stack">FastAPI, Vite, Monaco, the Web Speech API and Gemini</p>
+            <div class="proj__links"><a href="https://github.com/Rick-boom/AI_Interview" target="_blank" rel="noopener">Source on GitHub</a></div>
+          </article>
+          <article class="proj work__wide">
+            <div class="shot shot--wide cut"><img src="/img/work-devarena.webp" width="1600" height="640" loading="lazy" alt="DevArena landing page: Competitive programming, head to head."></div>
+            <div class="proj">
+              <div class="proj__meta"><h3>DevArena</h3><span class="proj__kind">Real-time platform</span></div>
+              <p>Ranked one-on-one coding rounds with a live judge.</p>
+              <p class="proj__stack">React 19, TypeScript, Socket.IO and Prisma</p>
+              <div class="proj__links"><a href="https://github.com/Rick-boom/DEV-ARENA" target="_blank" rel="noopener">Source on GitHub</a></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="engine" aria-labelledby="engine-title">
+      <div class="container">
+        <div class="section__head">
+          <h2 id="engine-title">Out of stock, <span class="red">ranked</span> in one call</h2>
+          <p>Smart Reco scores every in-stock item in the same category on price and rating.</p>
+        </div>
+        <div class="map cut" data-map>
+          <div class="map__bar"><span><strong>Mother Dairy Toned Milk 500ml</strong> is out of stock</span><span>The real recommend() run on the project's seed data</span></div>
+          <div class="pane">
+            <p class="pane__file">services/recommendationEngine.js</p>
+<pre><code><span class="tk">const</span> WEIGHTS = {
+  category: <span class="hit" data-wire="cat">40</span>,
+  price: <span class="hit" data-wire="price">30</span>,
+  rating: <span class="hit" data-wire="rating">30</span>,
+};
+
+<span class="cm">// HARD GATE: no stock, no recommendation.</span>
+<span class="tk">const</span> qty = inventoryMap.get(id) ?? <span class="tk">0</span>;
+<span class="tk">return</span> <span class="hit" data-wire="stock">qty &gt;= minStockQty</span>;</code></pre>
+          </div>
+          <div class="pane">
+            <p class="pane__file">POST /api/recommendations/generate-recommendations, 201</p>
+<pre><code>[
+  { <span class="tk">"productName"</span>: "Amul Taaza Milk 500ml",
+    <span class="tk">"recommendationScore"</span>: 85.4,
+    <span class="tk">"tags"</span>: [<span class="hit" data-wire-to="cat">"Same Category"</span>, "Higher Rating",
+             <span class="hit" data-wire-to="stock">"In Stock"</span>] },
+  { <span class="tk">"productName"</span>: "Nandini Toned Milk 500ml",
+    <span class="tk">"recommendationScore"</span>: 83.5,
+    <span class="tk">"tags"</span>: ["Same Category", <span class="hit" data-wire-to="price">"Lower Price"</span>,
+             <span class="hit" data-wire-to="rating">"Higher Rating"</span>, "In Stock"] }
+]</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="rebuild" aria-labelledby="rebuild-title">
+      <div class="container band">
+        <div class="band__copy">
+          <h2 id="rebuild-title">Every layer, <span class="red">redrawn</span> live</h2>
+          <p>Eight agents build each section as you scroll. Press rebuild and 24 of them redraw the whole page, frame by frame and letter by letter.</p>
+          <div><button class="key key--primary" type="button" data-rebuild>Rebuild this page</button></div>
+        </div>
+        <div>
+          <div class="cmd cut-s cut"><code><span class="tk">&lt;script</span> src="/rebuild.js" data-scroll="true" defer<span class="tk">&gt;&lt;/script&gt;</span></code><button class="key key--sm" type="button" data-copy="&lt;script src=&quot;/rebuild.js&quot; data-scroll=&quot;true&quot; defer&gt;&lt;/script&gt;">Copy</button></div>
+          <p class="band__note">One file, no dependencies. It works on React, Vite and plain HTML.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="container">
+        <div class="section__head">
+          <h2 id="about-title">More than <span class="red">code</span></h2>
+          <p>What I work with, and where it shipped.</p>
+        </div>
+        <div class="ledger-wrap">
+          <table class="ledger">
+            <thead><tr><th scope="col">Area</th><th scope="col">Tools</th><th scope="col">Shipped in</th></tr></thead>
+            <tbody>
+              <tr class="is-wash"><td>AI</td><td>Gemini, FastAPI, Web Speech API</td><td>PlacementPrep AI, Smart Reco</td></tr>
+              <tr><td>Frontend</td><td>React 19, TypeScript, Vite</td><td>DevArena, this site</td></tr>
+              <tr><td>Backend</td><td>Node, Express, MongoDB, PostgreSQL</td><td>Smart Reco, DevArena</td></tr>
+              <tr><td>Real-time</td><td>Socket.IO, Yjs, BullMQ</td><td>DevArena</td></tr>
+              <tr><td>Design</td><td>Figma</td><td>Every project here</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="roles">
+          <div class="role cut"><h3>NSS Coordinator</h3><p>National Service Scheme, BIT Mesra</p></div>
+          <div class="role cut"><h3>Technical member</h3><p>IEEE Student Branch, BIT Mesra</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <div class="container contact">
+        <div class="contact__copy">
+          <h2 id="contact-title">Let's build <span class="red">together</span></h2>
+          <p>Internships, hackathon teams or a product idea. Tell me what you're building.</p>
+          <div class="direct">
+            <div class="direct__row"><span>Email</span><span class="val" id="email-val">parthibsaha.11sc2020@gmail.com</span><button class="key key--sm" type="button" data-copy-from="email-val">Copy</button></div>
+            <div class="direct__row"><span>GitHub</span><a class="val" href="https://github.com/Rick-boom" target="_blank" rel="noopener">github.com/Rick-boom</a><span></span></div>
+            <div class="direct__row"><span>Resume</span><a class="val" href="/Parthib_Saha_Resume.pdf" target="_blank" rel="noopener">Parthib_Saha_Resume.pdf</a><span></span></div>
+            <div class="direct__row"><span>LinkedIn</span><a class="val" href="https://www.linkedin.com/in/parthib-saha-752a20203" target="_blank" rel="noopener">in/parthib-saha-752a20203</a><span></span></div>
+          </div>
+        </div>
+        <form class="form cut" id="contact-form" novalidate>
+          <div class="field-row">
+            <label for="cf-name">Your name</label>
+            <input class="input cut-s" id="cf-name" name="name" type="text" autocomplete="name" required maxlength="80">
+            <p class="help" id="cf-name-help"></p>
+          </div>
+          <div class="field-row">
+            <label for="cf-email">Email</label>
+            <input class="input cut-s" id="cf-email" name="email" type="email" autocomplete="email" required maxlength="120">
+            <p class="help" id="cf-email-help"></p>
+          </div>
+          <div class="field-row">
+            <label for="cf-message">What are you building?</label>
+            <textarea class="input cut-s" id="cf-message" name="message" required minlength="10" maxlength="3000"></textarea>
+            <p class="help" id="cf-message-help"></p>
+          </div>
+          <div class="trap" aria-hidden="true"><label for="cf-company">Company</label><input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off"></div>
+          <div class="form__foot">
+            <button class="key key--primary" type="submit">Send message</button>
+            <p class="help" id="cf-status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <canvas class="divider" aria-hidden="true"></canvas>
+    <div class="container foot__in">
+      <a class="wordmark" href="#top">Parthib<span>_</span></a>
+      <p>Designed and built by Parthib Saha in 2026.</p>
+      <div class="foot__links"><a href="https://github.com/Rick-boom" target="_blank" rel="noopener">GitHub</a><a href="https://www.linkedin.com/in/parthib-saha-752a20203" target="_blank" rel="noopener">LinkedIn</a></div>
+    </div>
+  </footer>
+</div>

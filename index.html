@@ -3,15 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Parthib Saha — Aspiring Frontend Designer & AI Engineer. Portfolio showcasing projects, skills, and journey." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="Parthib Saha builds AI products and real-time web apps: Smart Reco, PlacementPrep AI and DevArena." />
+    <meta name="theme-color" content="#0b0b0c" />
+    <meta property="og:title" content="Parthib Saha, developer and designer" />
+    <meta property="og:description" content="AI products and real-time web apps, built end to end." />
+    <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
-    <title>Parthib Saha — Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="/img/parthib-code.png" />
+    <title>Parthib Saha, developer and designer</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <!-- agents build each section as it scrolls into view; any [data-rebuild] button redraws the whole page -->
+    <script src="/rebuild.js" data-root="#site" data-agents="24" data-canvas="dark" data-accent="#ff2b1c" data-scroll="true" defer></script>
   </body>
 </html>
